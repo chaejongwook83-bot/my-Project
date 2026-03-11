@@ -1,0 +1,1773 @@
+https://github.com/chaejongwook83-bot/my-Project.git
+
+
+APM -------- 모니터링
+https://10.134.242.161:8443/ 
+erpmon_apm/ erpmonapm123! 
+
+
+- 3-9 일 월요일 송장 인터페이스 입고 문서 번호 추가 필요(테스트) 
+ZMMH_IF_IV_CREATE_M2B
+T_ITEM 마지막 줄에 MBLNR 추가해주시면 됩니다
+
+
+--- 역발행 수신 값이 null 값으로 처리가 안되서 수기 승인으로 변경 요청
+edit MM_TAX_H
+WHERE TAX_NO = '2026022841000208ef000005'
+IF_INVO_NUM
+200000276_20260304174755
+
+
+전표결재 화면에 계속 단위가..단위코드로 보이고 있어서 단위명이 보일 수 있도록 변경 요청드립니다.
+
+
+2025111141000208ef000002 정발행 역발행바꾸니까 이상해지는듯?? 확인 필요
+\
+
+-- 세금 계산서 수기 등록일 경우 전자전표 결제 화면에서 링크에 (정발행 , 역발행 , 수기등록 ) 표시 필요  -- 따로 전표결제에 칸이 있었음 . 완료
+
+
+--- 송장 전자전표 회수 기능 추가 필요.
+
+
+
+                 AND ROWNUM = 1 ) AS ZZTDR1         /*실지급처             */
+            ,NULL AS ZZBANK         /*은행키             */
+            ,NULL AS ZZACCN         /*계좌번호             */
+			
+- 송장 인터페이스시,  발주거래처와 송장 거래처가 다를경우에만 ZZTDR1 값세팅 ZZBANK, ZZACCN 값도 세팅해줘야됨.  ( 다자간 계약 케이스 )    - 안해도됨 확인
+- 발주거래처와 송장 거래치가 동일한경우는 ZZTDR1 , ZZBANK, ZZACCN 값을 NULL 로 전송 해야됨.  - 안해도됨 확인
+
+
+
+어제 전표관련 재무팀 요청사항 전달드립니다.
+1) 전표결재 화면에서 표시되는 계좌정보(은행명, 계좌주, 계좌번호) 보이지 않도록 요청
+2) 동일거래처로 대금이 집행되는 건은 계정지정 필드에 값이 입력되지 않도록 요청
+
+1)번 : 계좌정보(은행명, 계좌주, 계좌번호)는 전자전표와 확인해서 빈값으로 보내는걸로 했습니다.(채차장님 F/U 해주세요)  ---------- 완료
+2)번 : MM에서 처리완료
+
+
+-- 기성 내부포탈 정산 담당자가 필요함. 접수시에 업데이트 처리 및 상세 화면 처리 정산 담당자만 가능함.   --------- 완료
+   기존 데이터 마이그 필요  RCN 데이터를 REQ 로 변경 또는 RCN 데이터를 담당자 정보 확인 입력   --------- 완료
+
+-- 송장 지급조건 선택할경우, PAYMENT_TERMS 코드의 값으로 지급방법 및 날짜세팅 로직 추가 될 예정.
+기본 익월
+100 번대는 익익월
+99는 익월 말일
+
+
+
+
+안녕하세요. 구매담당자 요청사항 전달드립니다.
+납품대금지급처리 [/srm/mm/pv/MM_PV0100_01L], 납품대금지급확정 [/srm/mm/pv/MM_PV0200_01L] 화면 검색 조건에 "파트너사코드" 추가 부탁드립니다.
+
+납품대금지급확정 화면 내 버튼명도 수정 부탁드립니다.  --- 완료
+재마감 > 마감취소
+
+구매요청현황 상태값에 따른
+PR_D1 상태값 변경 처리
+
+private final DeliveryItemMapper deliveryItemMapper;
+
+        //PR_D1 상태값 변경 처리
+        MwfMap<String, Object> prd1StatusMap = new MwfMap<String, Object>();
+        prd1StatusMap.put("PROCESS_GUBUN", "DL");
+        prd1StatusMap.put("UID", mmDlHEntity.getDlHUid().toString() );
+        deliveryItemMapper.updatePrd1Status(prd1StatusMap);
+
+
+김성민(롯데글로벌로지스-DX서비스팀) 2026-02-20 오후 3:18 • 
+박한영(매트릭스투비)
+1. 내자조달 > 납품대금지급 > 납품대금지급 처리 [/srm/mm/pv/MM_PV0100_01L]
+- 마감월, 파트너사, 구매부서 별로 그룹핑
+- 본인이 속한 부서의 정보만 조회
+단, 구매팀은 부서정보 클리어 권한 부여   -- 구매요청접수 화면 참조
+- 담당자, 지급조건, 지급방법 자재내역 팝업에서 항목 추가 -- 삭제
+- 기존 마감 기능 외 자재별 선택하여 마감 진행
+
+
+
+-- 마감관련 문의
+1.납품지급처리에서 데이터 묶음 처리 이슈. 지급방법, 지급조건  - 발주 데이터 강제 변경으로 묶음 처리되게 데이터를 변경 해줬음.
+2.세금계산서 미리보기 날짜 오류 관련 문의 - 정발행건은 작성일자로 매핑되게 수정 처리, -- 완료
+  수기 승인건에 대해서는 날짜를 변경 할 수 없음으로 실제 계산서와 날짜 상이하게 나옴. 처리할 수 있는 방안이 없어서, 조치사항이 없음. 송장 등록시 증빙일로 발행일을 갱신 해주기로 함. -- 완료
+  
+
+
+ㅠㅠ혹시 입고 시 작성>입고도 가능할까요...? - 완료
+
+파트너사 수주확인 화면에서 "인쇄" 버튼의 명칭을 "발주서 인쇄"로 수정 요청드립니다. -- 완료
+계약서 작성 시 화면에서 계약기간(시작일, 종료일) 변경하면, 계약일이 해당 값으로 같이 수정되고 있습니다.  같이 수정되지 않게 변경해주세요. -- 박과장 완료
+
+입고대상 화면 [/srm/mm/mi/MM_MI0100_01L] & 입고관리 화면 [/srm/mm/mi/MM_MI0200_01L]   -- 완료 
+- 검색 조건 "업무단위" 삭제 요청드립니다. (불가하다면, 제일 마지막으로 이동해주세요)
+- 기존 업무단위 조회조건 자리에는 파트너사명이 위치하도록 요청드립니다.
+
+입고관리 화면 [/srm/mm/mi/MM_MI0200_01L]   ----- 완료
+- 리스트 항목에서 입고금액, 미입고금액 추가 요청드립니다.   -- 미입고 금액은 발주들이 여러개 낚일 수 있다...  
+- 입고취소 문서 조회되지 않도록 요청드립니다(적용완료)
+- 작성자 항목명칭 "입고자"로 수정요청드립니다.
+
+현재 입고 시 [ 작성>확정>입고 (완료) ]로 진행되고 있으나,  [ 작성>입고확정]으로 진행할 수 있게 단계를 줄여달라는 요청이 있습니다.
+
+
+안녕하세요. 
+내자조달 > 송장관리 > 송장관리 [/srm/mm/iv/MM_IV0600_01L] 화면 항목 수정요청드립니다. ------------ 완료
+- 추가 항목 : 코스트센터 코드
+- 삭제 항목 : 플랜트코드, 플랜트, 참조유형, 문서구분
+- 항목명칭 변경 : 등록자 > 작성자
+
+
+-- 어딘가 계약서의 첨부파일이 보여야 된다고 했음.... 내부포탈 기성정산 현황 상세 화면에 첨부계약서 탭 추가. SDC 는 워터마크된 문서?? 확인 필요 SDC 제외는 기본문서 -- 완료
+SELECT CT.CT_NO,
+       CT.PRICE_TYPE_CODE,
+       CT.*
+  FROM MM_CT_H CT
+  JOIN SY_DOC_ATTACH DA
+    ON DA.DOC_NAME LIKE 'CONTRACT_SDC%'
+   AND DA.DOC_UID = CT.CT_H_UID
+ WHERE CT.ACTV_FLAG = 'Y'
+   AND CT.PROCESS_TYPE_CODE = 'P500'
+
+
+--  발주 저장시 pr 중복체크에 ct_d1_uid 도 포함해서 있는지 체크 해야됨. 계약 품목 찢을 경우 있음. --완료
+
+LGL사업자번호   -- 완료
+사업자명        -- 완료
+
+
+D:\util\jbrsdk_dcevm17
+-XX:HotswapAgent=core
+
+실물량정산 시에 계약내역에 직접비 단가가 있는 항목은 간접비/기타금액이 입력 안되도록 막는 기능이 필요할 것 같습니다. 수량 0으로 입력 후 간접비에 단가가 입력이 된다면, 내역변경 없이 계약단가가 변경될 수 있기 때문에 리스크가 있어보입니다...! -- 완료
+
+마이너스 계산서 품의 개발.   -- 완료
+com.matrix2b.srm.mm.se.service.SettlementService@receiveSettlementApproval
+
+
+- 연단가 단가 금액 적용 관련 
+ - 연단가 ( 구매요청에서 발주 등록 ) 인 경우 단가 테이블 조회 해서 발주일자! 기준으로 최근 단가를 적용.  -- 완료
+   최초 로드시(발주일자가 세팅됨으로) , 저장시 점마다 해당 단가를 적용 시킨다.(발주일을 변경 가능함으로).  -- 완료 
+
+ - 2026.02.02 정기 반영 된 사항
+   - 세이프빌 계정을 LGL+사업자번호 , 파트너사 세이프빌 수신메일로 전송 되게 변경 되었습니다.  -- 완료
+
+-- 기성 결과 조회 정산 담당자 삭제.  -- 완료
+-- 기성 내부 기성 율 안나옴.  -- 완료
+
+1) 납품예상일 항목 추가
+- 내/외부 모두 추가 (외부에서 필수 입력 사항)   -- 완료 
+- 업체출고일보다 작으면 안됨                      --- 완료
+
+2) 입고알람은 납품예상일 이후로 발송
+- 단 알람 발송시, 파트너사에서 납품 요청 이후로 알람 발송
+
+입고 작성 시, 납품 예상일을 입고일자로 연계  -- 완료 
+
+납품서 자재라인쪽에 운송장번호 항목 추가 (비고항목과 유사함)    -- 완료
+필수값 아님. 프로세스 연계 항목 아님. (단지, 납품서에서만 확인 할 예정임)   --  완료
+
+EXPECTED_DELIVERY_DATE
+DL_NAME
+DL_ADDRESS1
+DL_ADDRESS2
+
+옙 ㅎㅎ 혹시 입고관리,입고대상 화면 조회 조건에 "발주관리번호"도 넣어 주실 수 있나요?  -- 완료
+
+입고 취소 관련 ----- 확인 필요?? 안해!!
+
+안녕하세요~! 입고 화면에서 코스트센터 값이 안보이고 있다고 합니다.    -- 완료 
+소싱그룹이 구매담당자명으로 나오고 있습니다. 항목명을 구매담당자로 변경부탁드립니다. -- 삭제하기로함 완료
+추가로 해당 화면에서 입고지(배송지)가 같이 보이게 해달라는 의견이 있습니다.   ------------ 완료 
+
+
+
+FN_CO_COMMON_CODE(H.CLIENT_CODE, H.COMPANY_CODE, 'C', 'COST_CENTER', POD.COST_CENTER_CODE, 'KO') AS COST_CENTER_NAME
+
+-- 정산담당자는 > 구매담당자로 변경 요청  -- 보이지 않게 변경.
+
+-- 송장 오류건 재전송 필요 김성민 책임에게 요청. -- 완료
+
+차장님. 내일 오시면 납품 1개를 여러번 입고 잡을수 있게 변경해야 합니다.  -- 완료 
+
+예가산출 자재별 결과 [/srm/mm/rx/MM_RX3300_01L]  권한별 부서제한있음.
+
+
+박준영(매트릭스투비) 2026-01-22 오전 10:02 • 
+com-gitlab.lottegl.com
+git 가입해주시구 아이디 알려주세요~
+최성욱(매트릭스투비) 2026-01-22 오전 10:05 • choisw / choiswmatrix2b.com
+이영상(매트릭스투비) 2026-01-22 오전 10:05 • yslee / ysleematrix2b.com
+손이현(매트릭스투비) 2026-01-22 오전 10:07 • sonyh / sonyhmatrix2b.com
+본인 2026-01-22 오전 10:07 • JongWook / chae.jong.wook83gmail.com
+권미영(매트릭스투비) 2026-01-22 오전 10:08 • kmy / myoung8420naver.com
+민경태(매트릭스투비) 2026-01-22 오전 10:11 • minkt / minktmatrix2b.com
+
+https://docs.google.com/spreadsheets/d/1Y6j3XojEny4U4OmkcE0ajvYSV_rInLz0cp_t6rX14sE/edit?gid=1124564784#gid=1124564784
+
+예가 rx_d1 - amount
+투찰가가 bd_d1_amount
+
+a 70 
+b 100
+일경우 100이 적정가임. 
+c 130
+일경우 130이 적정가임. 
+
+( 예가금액 - 상위 3개사의 80미만 투찰시, 3개사 평균금액이 예가 금액으로 간주. )
+
+예가금액 대비 투찰 금액 80%미만
+ 투찰 금액이 상위 2개 파트너사간 10이상인경우에 한함.
+ 상위 3개사의 80미만 투찰시, 3개사 평균금액이 예가 금액으로 간주.
+아닐 경우 
+ 투찰 금액 상위 2개사간 차이 30% 이상 -- 예가금액이하중에서. 
+
+
+박한영(매트릭스투비) 2026-01-06 오후 3:24 • 수량단위 명칭항목 추가해주세요.
+박한영(매트릭스투비) 2026-01-06 오후 3:36 • SELECT POI.QUANTITY_UNIT,
+FN_CO_COMMON_CODE(PO.CLIENT_CODE, PO.COMPANY_CODE, 'S', 'QUANTITY_UNIT', POI.QUANTITY_UNIT, 'KO') AS QUANTITY_UNIT_NAME
+FROM MM_PO_D1 POI
+JOIN MM_PO_H PO
+ON PO.ACTV_FLAG = 'Y'
+AND PO.PO_H_UID = POI.PO_H_UID
+WHERE POI.ACTV_FLAG = 'Y'
+박한영(매트릭스투비) 2026-01-06 오후 3:37 • 공통코드 가져오는 펑션을 활용하셔도 되고, 바로 서브쿼리 사용하셔도 됩니다!!
+박한영(매트릭스투비) 2026-01-06 오후 3:39 • 'KO' 이 파라메터는 로그인 유저의 정보 사용하셔도 됩니다.
+
+
+----------------------- 운영반영이후-----------------------
+내자조달 > 기성/정산관리 > 기성/정산 결과조회 [/srm/mm/se/MM_SE0200_01L]
+상세화면 > 문서연계(탭)은 구매부서 권한만 보일 수 있게 변경
+
+1.27 
+입고 일괄 적용 오류 수정
+입고 수정 없지 저장시에도, 자산관리 번호 체크로직 추가
+기성 다운로드 로직 관련 데이터 사이즈만큼 로직 추가
+기성 검토부서 첨부파일 추가 수정
+
+
+1.21 
+세이프빌 조회 조건 숫자 형식 변경.
+납품서 상세, 입고관리 , 입고 상세 , 입고 자재별현황 단위명 추가
+세금계산서 링크 파라미터 변경
+납품 입고시 다중 입고 가능 하게 변경.
+
+
+1.20
+납품서현황 , 납품서 자재별 현황 , 입고대상 단위명 추가
+기성현황 - 공내역서 버튼 상태별 숨김처리.
+입고 대상 - 기본을 자재별로  조회되게 요청 ( 김성민 책임 )
+
+1.14
+통계현황 > 일반사항 > 전자세금계산서 현황 [/srm/mm/id/MM_ID1100_01L] 쿼리오류 수정
+발주 단위명 추가
+
+1.13
+1.납품지연알람 005 건 수주확인 5영업일 조건 삭제 조치.
+2.발주 생성 데이터 RX 말고 PR 테이블의 입고 담당자 정보로 변경
+
+1.09 
+입고관리 자재명 조회 오류 해더 조회건으로 자재명 조회 삭제.
+
+1.08
+1.발주관리 구매요청자명으로 조회시 조회 되지 않음 오류. 보는 컬럼 수정
+
+
+2026.01.07
+1. 납품지연 관련 메일 파트너사, 구매담당자 수정사항 반영
+2. 파트너사 입고 내역 자체 조회 오류 수정 - 조회 컬럼 매핑이 안되어있었음. 
+3. 납품현황 CFM REQ 포함으로 조회 변경, 문구 납기 -> 납품 변경
+4. 발주 인터페이스 NETPR 값을UNIT_PRICE 에서,  MM_PO_D1.UNIT_PRICE * MM_PO_D1.PER_UNIT_PRICE로 변경
+
+2026.01.06  
+- 파트너포탈 수주관리 상세 화면 발주수량 보이지 않음. 보이게 조치.
+- 납품관리 - 인쇄 거래명세서 공급받는자 정보에서 전화번호, 이메일은 구매담당자 정보로 세팅요청, 사업자번호 구분자 표시 포함 처리. 벗어나는 문자 확인.
+ 
+
+
+
+009
+[입고 요청 알림]구매요청 건(@{PO_NO})에 대해 파트너사 납품서 등록이 완료되었습니다. 통합구매 시스템 내에서 납품 수량 확인 후 입고를 진행해주세요.
+※ 입고년월은 반드시 납품년월(세금계산서 발행년월)과 동일하게 입고되어야 합니다(상이할 경우 입고 취소 후 재입고 요망).
+
+- 금번 입고월 : @{MI_YYYY} 년 @{MI_DD}월   --- 이거 금번 입고년월이 어떤 데이터를 의미하는지 문의해봐야됨.
+
+서원섭 2025-12-29 오후 2:46 • 
+박한영(매트릭스투비)
+채종욱(매트릭스투비)
+DELIVERY_TIME(납기요청시간)이 뷰에서 숨겨지지 않은 내자조달 화면이 있음
+도급입찰 방문자 리포트가 나오지 않음
+입찰 방문자 리포트가 출력되는 예시 문서번호: RQ25120069
+
+
+
+참고: 요청하신내역이 해결되셨으면 우측 진행상태 항목에 '완료' 선택 후 저장 부탁드립니다.
+
+-- PO 마이그 번호는 기존(4번대 승인번호) 번호를 줘야 된다. 신규로 인식함.
+
+-- 자체필요사항
+--프로세스 유형 : P500 연단가, P200 비연단  -- 단가 테이블 뒤져서
+--서비스 타입 : TE2	자산, GN2	비용 -- 아이템 뒤져서.
+
+-- 헤더 필요사항
+--- 발주명 , 구매요청자, 검토부서, 구매부서 (부서코드,부서명, 사용자ID, 사용자명) , 지급조건, 지급방법 ( J : 고정  > 1천 초과  아니면 F )
+   
+   
+   ---- 부서들은  사용자 아이디로  - 부서를 세팅함.
+   ---- 입고담당자  -  요청담당자로 처리.   -- 부서는 변환을 해야됨.   SY_COST_CENTER  의 ORG_MAP_CODE
+   ---- 구매담당자는 :  구매그룹 으로 사용자 매핑 - G12 , CODE : PURCHASE_GROUP 코드에 있음.
+   ---- 검토부서 사번 , 부서코드 넣어줄꺼임.
+ 
+
+--아이템 자체필요사항
+--- 입고담당자, 배송지명, 배송지 주소
+-- 계정구분(600 일반관리비 / 541 운송경비)
+
+--대금지급 스케쥴 정보
+--- 공내역서, 대금지급스케쥴 ( 선급금, 중도금, 잔금, 회차, 지급율, 금액 )
+
+- 아이템 추후
+코스트센터  COST_CENTER_CODE
+기성여부 SE_FLAG
+계정코드 ACCOUNT_CODE
+계정코드명 ACCOUNT_NAME
+자산코드 WBS_CODE
+공내역서 PURCHASE_COST_UID , COST_CODE   -- 문서번호로 제공됨. 
+
+
+
+
+
+중간에 끊긴 일 내역입니다.
+서원섭 2025-12-29 오후 2:48 • 입찰,견적 결과표 출력물
+
+== 미완사항 ==
+선정된 건에 대해서만 예상금액과 투찰금액을 계산할 것.
+
+
+-- 변경 계약 관련 체크 적용 
+기성 승인반려, 발주 확정취소
+           ,(SELECT COUNT(1) FROM MM_CT_H T2                    
+                   JOIN MM_PO_D1 T3
+                     ON T3.ACTV_FLAG = 'Y'
+                    AND T3.CT_H_UID = T2.CT_H_UID
+                   JOIN MM_PO_H T4
+                     ON T4.ACTV_FLAG = 'Y'
+                    AND T4.PO_H_UID = T3.PO_H_UID
+                   JOIN MM_SE_D1 T5
+                     ON T5.ACTV_FLAG = 'Y'
+                    AND T5.PO_D1_UID = T3.PO_D1_UID
+                    AND T5.SE_H_UID = SE.SE_H_UID    
+                 WHERE T2.STATUS &lt;&gt; 'SDC'  -- 계약완료건만 변경중일때는 상태가 변경됨      적용
+
+LISTAGG(DISTINCT POH.PO_NO ||'('||POH.ERP_PO_NO||')', ', ' ON OVERFLOW TRUNCATE '...' ) WITHIN GROUP (ORDER BY PO_NO)  AS PO_NO,
+,LISTAGG(DISTINCT T1.MI_NO, ',' ON OVERFLOW TRUNCATE '...') WITHIN GROUP(ORDER BY T1.MI_NO) AS MI_NO
+
+-- 자재명 검색조건 삽입
+<search:so_keyword row="3" col="2" selectedListItemId="1" multi="false">
+                <search:so_keyword_item id="1" label="자재명"   value="1" columnName="" customSql=" D1.ITEM_NAME LIKE ':SEARCHOPTION_VALUE%'" />       
+            </search:so_keyword>
+			
+ ,(SELECT MAX(IC.COMPANY_ITEM_CODE)
+                  FROM   MD_ITEM_COMPANY IC
+                  WHERE  I.CLIENT_CODE = IC.CLIENT_CODE
+                  AND    I.ITEM_CODE   = IC.ITEM_CODE) AS ERP_ITEM_CODE			
+
+다자간 송정 완료 처리 봐야됨.   -- 반영 했음 테스트 필요함
+    <update id="updateSeHIvFlag" parameterType="hashMap">
+       UPDATE MM_SE_H SET IV_FLAG = #{IV_FLAG}
+         WHERE SE_H_UID IN (
+         SELECT SE_H_UID FROM MM_IV_D1 IVD1
+             WHERE IV_H_UID = #{IV_H_UID}
+              /*
+               AND
+                (
+                --다자간건이 아닌거나
+                NOT EXISTS ( SELECT 1 FROM MM_SE_L3 SEL3 WHERE SEL3.SE_H_UID = IVD1.SE_H_UID AND SEL3.ACTV_FLAG = 'Y' )
+                    OR
+                --다자간인건이라면 다자간 모든 건이 완료 되었을때 -- 입고 건수와 동일한지.. 테스트 해봐야됨.
+                ( SELECT COUNT(DISTINCT SEL3D.SE_L3_UID) FROM MM_SE_L3 SEL3D WHERE SEL3D.SE_H_UID = IVD1.SE_H_UID AND SEL3D.ACTV_FLAG = 'Y' )
+                =
+                ( SELECT COUNT(DISTINCT IVD1D.MI_H_UID) FROM MM_IV_D1 IVD1D WHERE IVD1D.SE_H_UID = IVD1.SE_H_UID AND IVD1D.ACTV_FLAG = 'Y' )
+                )
+                */
+         )
+    </update>
+
+송장코드 정리해야됨. 남길거
+
+if ( eaiTranNum == 999999999 ) eaiTranNum = 0000000000;
+		eaiTranNum++;
+
+-- 단기자산건 관련 체크 값은  -- 완료
+  투자오더현황에 오더유형이 C100, I200 이 단기 자산건으로 적용 되어야한다.  WBS_CODE , WBS_CODE_ORDER_TYPE
+,( SELECT S_MDH.ORDER_TYPE_CODE FROM MD_INVEST_ORDER_H S_MDH WHERE S_MDH.ACTV_FLAG = 'Y' AND S_MDH.WBS_CODE = POD.WBS_CODE AND ROWNUM = 1 )  AS WBS_CODE_ORDER_TYPE -- C100, I200 은 단기자산건
+, CASE WHEN ( SELECT S_MDH.ORDER_TYPE_CODE FROM MD_INVEST_ORDER_H S_MDH WHERE S_MDH.ACTV_FLAG = 'Y' AND S_MDH.WBS_CODE = POD.WBS_CODE AND ROWNUM = 1 ) IN ('C100', 'I200') THEN 'Y' ELSE 'N' END  AS WBS_ASSET_YN
+ 
+
+,( SELECT S_MDH.ORDER_TYPE_CODE FROM MD_INVEST_ORDER_H S_MDH WHERE S_MDH.ACTV_FLAG = 'Y' AND S_MDH.WBS_CODE = POI.WBS_CODE AND ROWNUM = 1 )  AS WBS_CODE_ORDER_TYPE -- C100, I200 은 단기자산건
+				, CASE WHEN ( SELECT S_MDH.ORDER_TYPE_CODE FROM MD_INVEST_ORDER_H S_MDH WHERE S_MDH.ACTV_FLAG = 'Y' AND S_MDH.WBS_CODE = POI.WBS_CODE AND ROWNUM = 1 ) IN ('C100', 'I200') THEN 'Y' ELSE 'N' END  AS WBS_ASSET_YN
+ 
+ 
+ $.grid("MM_PO_D1").dynamicStyle("MM_PO_L3_COUNT", function(grid, dataCell) {
+            var wbs_code = grid.getValueByName("WBS_CODE", dataCell.index.itemIndex);            
+            var wbs_asset_yn = grid.getValueByName("WBS_ASSET_YN", dataCell.index.itemIndex);  // C100, I200 단기자산 Y, N
+            if (wbs_code === null || wbs_code === undefined || wbs_code === '')    wbs_code = "";
+            if (wbs_asset_yn === null || wbs_asset_yn === undefined || wbs_asset_yn === '')    wbs_asset_yn = "N";
+            //wbs_code 가 C 로 시작되는 경우에만 자산 리스트 보이게 처리
+            //if ( wbs_code.startsWith("C") && "${PO_H_UID}" != "" ){
+           	if ( wbs_asset_yn === "Y" && "${PO_H_UID}" != "" ){
+                 return {styleName : "blue rg-link-renderer cursor: pointer"};
+            }
+
+        });
+		
+		if ( wbs_asset_yn === "Y" ) {
+		
+		if("I".equals(entity.getIfStatus())) {
+                String message = "SAP 전송 진행 건입니다. 기다려 주시기 바랍니다.";
+                throw new MwfRuntimeException(message);
+            }
+
+
+
+
+
+
+-- 발주 등록시 코스트 코드 변경가능하게  -- 완료
+rx_d1 테이블 값 봐야됨.               -- 취소 pr 값 봄
+
+
+-- 일반사용자 대시보드
+   입고수량 확인 해봐야됨.  -- 완료 전달
+
+
+--세금 계산서 발행시 이메일 필수인지(공급자)!?  -- 완료
+  -- 이메일이 변경될 수있음 다른 컬럼 사용.
+
+
+--------------------------------------------------------
+
+-- 납품지연알림음 제품 라인별로 검색해서 보냄. --. 완료
+
+-- 접수 취소 기능 필요,  이유는 정산 담당자 때문에  -- 접수시, 정산 담당자는 로그인한 사용자가 되어야함.
+
+-- 자산라인 관리건은 사원번호 필수 -- 완료
+
+-- 세금코드 기본으로 안깔림.
+
+-- 마감데이터는 아이템의 세엑들의 합들을 사용해야됨. -- 완료
+
+
+---------------------------------------------------------
+
+-- 마이너스 세금계산서 품의 관련 작업 진행중 -- 테스트 필요 
+   -- 역발행 건만, 상세 화면에서 역발행 정발행 수정불가 처리요청  -- 완료   -- 수기승인시 취소 기능이 없음...... ㅡㅡ;; -- 완료
+
+-- 반품 자산 정보 갱신 관련 테스트 진행중 상태값 바꿔서 테스트 해봐야됨.	-- 완료
+
+-- 공내역서 엑셀 업로드시 간접비 기타비가 들어가지 않았음.  ( 끝난 이후 조회해서 보니까 들어가있는것 처럼 보임. 현황에서 상세화면에서 다운로드 받았을때, 기성등록때 보이지 않았음.) -- 착시인것 같은??
+
+-- 공내역서 붙여 넣기 기능을 많이 사용함으로 라인별 메세지가 아닌 합쳐서 메세지를 표시하거나 표시를 다르게 해줘야할듯. 
+
+--공내역서 수량 체크는 필요 없다고 함?? 검토 논의 해봐야함.  
+
+
+
+--본인 2025-11-25 오후 2:12 • -- 기성 금액 소수점 없이 처리. ( 총금액 계산 생각해봐야됨. ) 
+   품의 올릴때 소수점이 보여짐
+
+-- 저장 단계부터 체크로직 적용 됨으로 처리. 인터페이스 오류이후 처리보다 저장이 안되면,
+   이전단계에서 부터 처리 할 수 있지 않을지?? 
+
+-- 발주 확정 전에 체크 사항 ( K 비용, 외 투자오더 )    -- 완료 
+1) 구매오더 SAP 발송 전 투자오더 건이면 투자오더번호 있는지 체크
+- 내부에서 구매오더 확정시
+- 내부에서 파트너사로 구매요청 요청시 (파트너사가 확정 시, 구매오더 인터페이스 되므로)
+
+2) 구매오더 SAP 발송 전 비용건은 코스트센터 필수
+- 내부에서 구매오더 확정시
+- 내부에서 파트너사로 구매요청 요청시 (파트너사가 확정 시, 구매오더 인터페이스 되므로)
+
+3) 구매오더 SAP 발송 전 비용건은 계정유형(541, 600) 필수
+- 내부에서 구매오더 확정시
+- 내부에서 파트너사로 구매요청 요청시 (파트너사가 확정 시, 구매오더 인터페이스 되므로)
+
+단기자산인경우 A 경우 투자오더타입이, C100, I200 이어야됨.
+다자간인경우 기성건이어야야됨.
+공내역서 매핑인경우 기성이어야됨.
+
+
+-- 파트너 포탈에서 기성 대상에서 공내역서 팝업 기정산 정보 보이지 않음. -- 서원섭님 조치중--완료
+
+--기성 관련 금액정산 금액이 있습니다 반제금액이 0입니다. 입력을 하시겠습니까? 메세지 필요 필수!  -- 완료
+
+--기성 금액에 소수점이 들어가짐. 소수점 필요 없음! -- 최성욱 차장 확인중 -- 완료
+  
+--공내역서의 기정산 수량이... 1,2 차포함인지, 이전차수인건지?? 문의 사항. ( 누적수량이어야됨.) 본인 이전차수들의 누적수량. -- 서원섭님 조치중 --완료
+ 
+--공내역서 기정산 금액이 3배나 많게 보임 이상하게 보임. 기정산 금액 등등 공내역서가 뭔가 회차별로 매칭안되고 뭔가 계산이 정상적으로 되지 않음.  -- 서원섭님 조치중--완료
+
+--- 마감에서 그룹바이 처리 추가 요청.  -- 완료. 
+
+SELECT * FROM MD_PURCHASE_PRICE_INFO
+where purchase_price_uid = 1101917
+order by 1 desc
+
+최종차수에 , suppier_code, item_code , price_type_code, 
+
+PAYMENT_TERMS_CODE, PAYMENT_METHOD_CODE
+윤주이(매트릭스투비) 2025-11-19 오후 3:07 • -.계약의 지급조건/지급방법 기준으로 정산기준 조정필요(추가논의 ㅣㄹ요)
+박한영(매트릭스투비) 2025-11-19 오후 3:25 • 
+담당자 : 채종욱(매트릭스투비)
+박한영(매트릭스투비) 2025-11-19 오후 4:05 • 연단가/비연단가 모두 포함   -- 연단가 계약 관련 정보는 박과장에게 문의 해야됨. 계약 찾을 수 없음.
+
+지급조건/지급방법이 상이할 경우, 마감 대상 화면에서 각 라인별 지급조건/지급방법까지 GROUP BY해서 보여줄것
+==> 해당 내용이 안 되면 이야기 해 주세요.
+박한영(매트릭스투비) 2025-11-19 오후 4:10 • 계약이 없는 건은 빈값으로 GROUP BY 되도록 할 것
+
+AND NVL(T4.PAYMENT_TERMS_CODE, 'XX') =  NVL(#{PAYMENT_TERMS_CODE}, 'XX') 
+           AND NVL(T4.PAYMENT_METHOD_CODE, 'XX') = NVL(#{PAYMENT_METHOD_CODE}, 'XX')
+
+GROUP BY T1.CLIENT_CODE, T1.COMPANY_CODE, T1.SUPPLIER_CODE, T1.SUPPLIER_NAME , T1.OPER_UNIT_CODE, SEL3.SUPPLIER_CODE, TO_CHAR((T1.ISSUE_DATE), 'YYYY-MM') , T4.PAYMENT_TERMS_CODE  , T4.PAYMENT_METHOD_CODE 
+
+-- 매입세금계산서 정발행 역발행 변경 관련, 버튼 오해하게 누를 수 있음. -- 완료
+
+-- 구매포탈 기성건 구매팀 승인 취소 필요.  -- 승인반려가 조회 화면에 붙어 있음!!!!!!!! -- 기능 확인 완료
+
+-- 납품없이 입고 바로 잡을경우 후에 납품수량, 자산시리얼관리 어떻게 처리 할지?? 
+
+--변경 계약건 확정 취소가됨.
+
+-- 선급금일경우 조정금액을 기본으로 요청금액 깔아줌, (확정금액도) 으로 처리
+-- 선급금이 아닐경우 
+
+--- 품의 반려시 요청 반려 되지 않음.   -- 서원섭 완료
+2025-11-24 10:48:19 [http-nio-8082-exec-8] [DEBUG] [100/100/21401274] com.matrix2b.srm.mm.se.mapper.SettlementMapper.selectSettlementCheck(debug:137) - <==      Total: 1
+2025-11-24 10:48:19 [http-nio-8082-exec-8] [ERROR] [100/100/21401274] com.matrix2b.srm.mm.se.service.SettlementService(saveSettlement:198) - 결재가 진행중이면 반려할 수 없습니다.
+com.matrix2b.mwf.exception.MwfRuntimeException: 결재가 진행중이면 반려할 수 없습니다.
+	at com.matrix2b.srm.mm.se.service.SettlementService.validateSettlement(SettlementService.java:601) ~[main/:?]
+	at com.matrix2b.srm.mm.se.service.SettlementService.saveSettlement(SettlementService.java:195) [main/:?]
+
+
+
+안녕하세요. ------------------------------------- 완료
+전표결재 신봉수입니다.
+결재연동시 아래 파라미터값 모두 제거 부탁드립니다.
+lstAprvSCDocLine
+lstAprvLDocLine
+lstAprvRDocLine
+lstAprvVDocLine
+
+	
+
+-- 금액정산경우 요청금액으로 조정금액(확정금액) 기본세팅, 물량정산일경우 조정금액은 0 , 공내역서를 통해서 값을 세팅하는 금액으로 표시 및 처리. 
+
+-- 금일 통테 이슈 사항
+-- 역발행 세금계산서 오류건에 대해서 세금계산서 팝업 링크는 잘 못걸려있는 부분입니다. ( 정상건에 대해서만 링크가 걸리게 수정 예정 ) - 소스수정완료 ( 서원섭님 ) 
+-- 자산 미관리 건에서 관리건으로 변경시 발주 저장 및 확정시점에 적용 되게 변경 요청 - 확인 및 진행 예정 ( 채종욱 ) 
+
+-- 인터페이스시 아이템 라인별로 보내는지 확인 체크 필요. 송장에 보내지 않았었음 -- 완료
+
+-- 자산라인 발주에서 입고 바로 등록시에 자산 테이블 정보가 연계되지 않음. 
+-- 발주 - 입고 - 납품순서 시에 납품 수량이 입고제외수량이 적용이 되어야함.(자산라인도 적용되어야함.)
+
+-- 납품 대금 지급 - 마감 찢을 수 있음. - 지급조건별 , 등등등등. 
+
+-- 잔금 케이스 확인해봐야됨 , 공내역서 아닌건에 대해서
+
+
+-- 송장 상세 화면 트렌젝션은 송장만보이게
+
+-- PO 인터페이스 GR BASE 값 'X' 고정 -- 완료
+
+-- 자산라인 닫기 버튼 일때 메세지 필요.
+
+-- 자산라인 자동조정 체크 했을때 체크만 삭제됨 이상함. 확인 필요   -- 체크된거 모두 해제하고 로직 돌려야 처리해야될듯
+
+-- 납품 5,8 30 이였어나 입고에서는 5,30,8 으로 순서가 나옴 오더바이 필요함. 
+
+-- 입고시 자산텝의 자산 관리자 는 일반 텍스트 박스로 사번 직접입력 또는 붙여 넣기하겠다함.
+
+-- 입고일 최초 세팅 값이 무언가... 
+
+-- 마감 상세에서 체크건만 마감이 되나?? 안되지!! 
+
+-- 라인별 문서별 그리드 위 체크 디자인 변경 요청  -- 손과장 수정 완료 
+
+-- 대용량 납품 자산건 테스트 해봐야됨.
+
+-- ct_d1 에 po_d1_UID 가 들어가지 않았음.
+
+PurchaseRequestService.java[364]
+
+// 대량구매 품목 Batch 저장
+BeanUtil.getBean(PurchaseRequestService.class).insertItemBatch(data, entity, paramMap);
+  mwfCommonBatchDao.insert("com.matrix2b.srm.mm.pr.mapper.PurchaseRequestItemMapper", "insertItemBatch", item1Entity);
+ff0000
+
+---------- 완료 
+결재문서상에 임베디드 형태로 세금계산서 표기를 하고 있습니다.
+현재 표기가 되지 않는 부분이 있어 확인해보니
+https 에서 http 주소를 표기하는 부분이 있어서
+전송시점에 세금계산서 URL https 주소로 전송가능하실까 해서 문의드립니다
+
+
+ -- 마감 여러건 선택하여 각각의 마감 작성을 한번에 진행해도 되나요?  원하는건 한번에 처리 되게.  -- 완료
+
+3.입고가능수량/입고수량 SUM 넣을것 -- 완료 
+ 
+-- 납품대금지급 처리 , 구매담당자 리스트 암호화 안되어있음. -- 완료
+
+-- MM_PV0100_01L 납품대금지금 하단 합계 필요 ??? -- 완료
+
+-- 송장 승인 취소시 문서 체크가 들어가있음.. 다음 기성건이 작성되어있음 체크 확인 -- 완료
+
+-- 인터페이스 추가 필드 적용 필요 -- 완료
+
+-- 마감에서 ALPS 여부 보일수 있도록 (좀더 이야기 나누는 걸로) alps 자재건수 , 상세 화면 알프스 여부표시.
+  , COUNT(DISTINCT T2.MI_D1_UID) AS ITEM_CNT     
+                   , COUNT( DISTINCT CASE WHEN  T4.SOURCE = 'ALPS' THEN  T2.MI_D1_UID ELSE NULL END ) AS ITEM_CNT_ALPS                       
+
+
+ ,CASE WHEN  T4.SOURCE = 'ALPS' THEN  'Y' ELSE 'N' END AS ALPS_YN
+
+-- 마감에서 최종입고일 추가 (좀더 이야기 나누는걸로) 월별 그룹바이 추가. -- 완료
+
+-- 변경계약 시 대금 지급 삭제가 되버림. (기성건이 기성아닌건으로 변경됨)
+-- PO 인터페이스 GR BASE 값 'X' 고정
+-- 계약 left join 서브쿼리 관련 쿼리 오류
+
+
+본인 2026-02-03 오후 1:45 • -- 세이프빌 메일 재전송(개발)
+https://devsafebill.lcn.co.kr/dti/mailSend.json
+
+210.93.181.26
+
+443
+
+-- 세이프빌 메일 재전송(운영) 
+https://www.safebill.co.kr/dti/mailSend.json
+
+223.253.99.187
+
+443
+
+DSBMSPCMWAS01 [10.134.254.184]
+
+
+IFO_M2B_SAP_0001
+IFB_M2B_SAP_0002
+IFO_M2B_SAP_0005
+IFO_M2B_SAP_0007   -- 발주 
+IFO_M2B_SAP_0008   -- 발주
+IFO_M2B_SAP_0009   -- 입고
+IFO_M2B_SAP_0010   -- 입고
+IFO_M2B_SAP_0011   -- 송장
+IFO_M2B_SAP_0012   -- 송장
+IFO_M2B_SAP_0013   -- 지급전표 수신
+
+eaiMap.put("ZSRCSYS", "C");
+//eaiMap.put("ZSRCSYS", "C"); -- 우선 주석 조치 테스트 후 풀어야됨
+
+위의 리스트에 해당하는 경우 항목 추가하시고 답변 달아 주시길 바랍니다.
+(인터페이스 정의서에 노랑색으로 표시하였습니다.)
+
+추가된 필드값은 ZSRCSYS 이고 고정값으로 'C' 넣어주시면 됩니다.
+
+
+, TO_CHAR(TRUNC(MAX(IVH.CLOSE_DATE)), 'YYYYMMDD')||'41000208ef'||
+                        MAX(LPAD(  (SELECT COUNT(1) FROM MM_TAX_H TH WHERE TO_CHAR(TH.ISSUE_DATE, 'YYYYMMDD') = TO_CHAR((IVH.CLOSE_DATE), 'YYYYMMDD')  )+1  , 6, '0'))  AS SRM_TAX_NO
+
+-- 대용량 오류 
+   -- 구매그룹이 안찍혀있음.
+   -- 구매조직 바뀌어야함 - 박한영이사님 코멘트 해주길 바람
+
+
+-- 발주 상세 공내역서 조회 안됨. -- 완료
+-- 기성 체크 로직 제외 해야됨. -- 완료
+
+-- 다자간 납품예정일이 들어오지 않음. -- 최성욱차장 확인 진행 
+-- 잔금앨경우 총 금액의 계산 체크를 하지 않음. 체크해야됨. -- 반영됨 원섭이가 반대로 체크해놨었음. 수정 -- 완료
+-- 다자간 잔액 표시 해줬음 좋갰음. 계산 어려움.
+-- 납품 마감 리스트 합계
+-- 기성 이후 추가 파트너사 팝업에는 금액도 표시 필요 -- 완료
+
+-- 송장 에러 화면에 표시되지 않았음.. --완료
+
+-- 송장 다자간 건 다자간이 다 처리된 경우에 기성건 -- 완료 처리 주석처리해놨음 테스트 필!
+
+   
+   -- 발주상세 수량 sum 추가. -- 완료
+   
+   --납품 대상그리드 성적서, 파일 컬럼 숨기기  -- 완료
+   // 분자, 분모, 오더수량, 오더단위 항목 숨김
+        gridObj_MM_PO_D1.setColumnHidden("BASE_QUANTITY", true);  FILE_CNT  FILE_CE_CNT
+   
+   --입고일자 - 납품예정일?? 
+   
+   --입고 버튼 클릭시 뺑글이 안돔??  -- 작동안됨!!! ㅡㅡ;;
+   
+   --발주 상세 계정명이 안나옴!!    -- 완료 인터페이스로 받음
+     erp 자재코드, 자재그룹 안나옴.
+	 
+   --변경 계약건 발주확정 취소 안되게 해야됨.
+   
+   --변경계약 발주 데이터 관련 기존 수량이변경 되지 않았음.  -- 완료 다른 컬럼 보여주고 있엇음.
+   
+   --기성 품의 화면 너무 좌측에 있음.
+   
+   --송장관리 상세 화면 문서종류 물류송장만 보이게 아님 숨기기 
+   
+   --계산서 발행일자로 , 송장일자 , 전표일, 증빙일 자동으로 깔아줌.  -- 완료
+   
+   --변경계약 기성스케쥴 기존건도 지급율이 업데이트 됨.  -- 발주에서 변경불가 -- 변경 계약건으로 다 업데이트 침. --완료
+   
+   --기성건 1차수가 사라짐. 다 받아서 업데이트 해야됨.  합계 조치 해줘야됨.  - 완료
+   
+   -- 전표결제 시스템 아이템 순번이 썩임. 대용량.
+   
+   
+
+--  발주 변경 관련 삭제건이 있나??? 박한영 이사님 논의 필요! --없음 대비로 해놓은거임 --  완료
+
+-- 납품? 발주에서 바로 입고 잡은건 납품에서 안떠야??  -- 입고수량 만큼 제외를 시켜야함.. ㅡㅡ 안되어있음.
+
+-- 발주 묶는거 진행중이였음, CT는 CT를 메인으로 봐야됨 ,납품, 입고 -- 완료
+
+-- 변경 계약 관련 기성건 자산 라인 관련 조치 필요 
+    - 자산라인이 줄을 경우 아래 라인에서 지워짐. - 자산라인이 늘을 경우 추가로 보내줌.
+	-- 기성 데이터 변경 변경 안해야되는건은, CLO 로 표기 해준다고 함. -- 완료
+	-- 자산일때 PO_ASST_LINE_NO 매핑으로 같은건 알수있음. -- 완료
+	-- 자산 라인은 최하단 부터 지워야 됨. -- 입고쪽 테스트 진행 중이였음. 자산 미관리건 테스트 해야됨,
+
+-- 다자간 계약 ( 금액에 대한 분산만 있음 )    
+   - 발주쪽은 기존 프로세스 동일 ( 업체 팝업 리스트 보여줘야됨 )
+   - BD_L3 값 유무에 따라서 다자간 여부. 업체가 여려개일경우, 동일업체는 아님. ( Y , N ) , 추가파트너사 컬럼 추가( 카운트 , 링크 추가 )
+	 - 대상 조회 부터, 관리,  품목까지
+	 - 파트너사도
+  - 기성   MM_SE_L3 테이블 추가
+    - 그리드 컬럼 추가 필요 BD_L3 값 유무에 따라서 다자간 여부. 업체가 여려개일경우, 동일업체는 아님. ( Y , N ) , 추가파트너사 컬럼 추가( 카운트 , 링크 추가 )
+    - 우측에 업체별 리스트로 금액일 할당 할 수 있게 화면 수정.
+	- 기성금액에 맞게 전체 금액이 세팅 되어야함. 기성 요청 금액과 , 세팅 된 금액은 동일해야됨.
+	
+	- 구매포탈 다자간일때 조정금액이 요청금액과 다른경우, 반려해야됨. - 박한영이사님 어떻게 처리할지 확인 해본다고함.
+	- 기성 선급일 경우에는 금액만 수정가능. 
+    - 선급을 선택한 경우에는 비율별로 아이템 금액을 세팅한다. )   
+   
+    - 실물량 정산일 경우  > 공내역서 수량변경 안됨.  공내역서가 없는 경우 수량변경이 가능하다.
+    - 실물량 정산일 경우 공내역서가 아닌경우, 기성수량은 잔량으로 깔아줌. 
+    - 입고수량 변경 불가.
+    - 기성 그리드에 선급반제 금액 라인 필요함.
+	
+	
+	
+  - 입고 
+    - 입고 수량은 다자간의 수량만큼 * 0.01   ( 업체가 5개일 경우 0.05 의 입고 수량이 잡혀야됨. 최종 1 로 맞춰짐. )  - 기성에서 해당 수량으로 등록이 되어야함.
+  
+    - 납품대금지급은 다자간일 경우, 업체별로 0.01 로 나뉘어 져서 등록이 되어야함. -- 테스트 확인 필요
+    - 기성건은 수량 변경이 불가능 함.
+  
+
+<grid:column_lnk  id="ADD_SUPPLIER_CNT"        name="추가 파트너사"     edit="<%=GridEditType.READ_ONLY%>" align="center"      width="120" clickEvent="showAddSupplierList()" parentColumn="SUPPLIER_NAME" />
+
+,(SELECT COUNT(1) FROM MM_BD_L3 BDL3 WHERE BDL3.ACTV_FLAG = 'Y' AND BD.BD_H_UID = BDL3.BD_H_UID AND BDI.BD_D1_UID = BDL3.BD_D1_UID) AS ADD_SUPPLIER_CNT
+
+// 추가파트너사 항목 보이기
+    function showAddSupplierList(){
+
+        // 1. 템플릿 보이기
+        // if(loadPurchaseCostItem('GRID_BD_ITEM')){
+        //     $("#purchaseCostDiv").removeClass("d-none");
+        //     resize();
+        // }
+
+        // 추가파트너사 매핑 key가 없으면 팝업 X
+        var rowData = $.grid('GRID_RX_ITEM').getCurrentRowData();
+        // var setUid = rowData.BD_D1_UID;
+        //
+        // if(setUid == ''){
+        //     return false;
+        // }
+
+        // 팝업으로 띄우기
+        var gridNum = GetGridNumById('GRID_RX_ITEM');
+        // callModalDialogN('/mdm/lov/LOV_PURCHASE_COST_ITEM_V','FORWARD','LOV_PURCHASE_COST_ITEM_V', '', '',  String(gridNum) , '', '');
+        // let status = $('input[name="STATUS"]').val();
+        // let editFlag = status == 'CFM' ? 'N' : 'Y';
+        callModalDialogN('/srm/mm/lov/LOV_ADD_SUPPLIER','FORWARD','LOV_ADD_SUPPLIER', 'EDIT_FLAG=N', '', String(gridNum), '', '500');
+
+    }
+
+
+추가파트너사 링크입니다. 
+입찰개봉결과조회 상세화면(MM_RX2300_11E) 화면 참고 부탁드립니다.
+
+---------------------------------------------------------------------------------------------------------------
+  
+  fetchSize="100">
+  
+-- 세금계산서 - 마이너스 세금계산서 발행 시 모임 품의 필요.   
+  
+	
+-- 세금계산서 인터페이스 db call 관련 오류 발생 "JDBC rollback failed; nested exception is java.sql.SQLRecoverableException: ORA-17008: Closed connection
+https://docs.oracle.com/error-help/db/ora-17008/"  -- 박준영과장이 WAS 담당자가 세팅관련 오면 문의 해본다고 함. 
+
+-- 세이프빌 인터페이스 공급받는자 담당자 정보 확인  필요	
+ 
+-- 기성고율 등등, 계산법 누적으로 다시 적용 해야됨 
+
+-- 송장 전표일은 앞에서 부터 입고에서부터 받는값. 
+
+-- 다중계약 협력사 기준 변경 된다고 했었음.. 현-제품라인별 1:1 협력사 -> 제품1개 라인별 1:N 여러 업체가 있음.
+
+-- 이어카운트 화면 앞쪽에 구매그룹인가 머시기인가 --- 뭔가 값이 필요 했었음. 
+
+-- 대량구매 관련 개발 필요?? 
+
+
+내자조달 > 납품대금지급 > 납품대금지급 처리 [/srm/mm/pv/MM_PV0100_01L]
+    - 항목 추가 : 발주번호 N, 내/외부 입고번호 N, 납품서번호 N, 기성번호 N
+        - 자재정보
+            - 항목 추가 : 기성번호/항번
+
+내자조달 > 납품대금지급 > 납품대금지급 확정 [/srm/mm/pv/MM_PV0200_01L]
+    - 항목 추가 : 발주번호 N, 내/외부 입고번호 N, 납품서번호 N, 기성번호 N
+        - 자재정보
+            - 항목 추가 : 마감번호, 기성번호/항번
+            
+내자조달 > 세금계산서관리 > 매입계산서 [/srm/mm/iv/MM_IV0200_01L]
+    - 자재사항 팝업 추가 (후 순위)
+    - 항목 추가 : 발주번호 N, 마감번호, 내/외부 입고번호 N, 납품서번호 N, 기성번호 N
+    - 상세
+        - 자재정보
+            - 항목 추가 : 발주번호/항번, 세금계산서번호, 마감번호, 입고번호/항번, 납품번호/항번, 기성번호/항번
+
+내자조달 > 송장관리 > 송장대상 [/srm/mm/iv/MM_IV0500_01L]
+    - 자재사항 팝업 추가 (후 순위)
+    - 항목 추가 : 발주번호 N, 마감번호, 내/외부 입고번호 N, 납품서번호 N, 기성번호 N
+
+내자조달 > 송장관리 > 송장관리 [/srm/mm/iv/MM_IV0600_01L]
+    - 인터페이스 메시지
+    - 항목 삭제 : 분개유형코드 ~ 상대계정, 지급보류코드 ~ 사유, 세금계산서, 지급보류상태
+    - 항목 추가 : 발주번호 N, 세금계산서번호(국세청승인번호)(팝업), 마감번호, 내/외부 입고번호 N, 납품서번호 N, 기성번호 N
+    - 자재
+
+잔여개발내역
+1. 계약내역변경
+계약내역변경 대상 - 손이현 - 완료
+계약내역변경 현황 - 손이현 - 완료
+변경계약 대상 - 손이현 (11/7)
+변경계약 내역 - 최성욱 (11/12)
+구매오더변경 (SAP연계) - 채종욱
+2. 대량구매 - 손이현
+대량구매요청(점) (11/7)
+대량구매요청 접수(본부) (11/7)
+대량구매요청 결과 (11/7)
+대량구매요청 예가산출 연계 (11/7)
+대량구매요청 구매요청 연계 (11/7)
+3. 상생구매 (CFD) - 채종욱
+상생구매 단가 정보 수신
+상생구매 신규 자재 대상
+상생구매 단가정보 SAP 전송
+상생구매 실적 전송
+4. 공내역서
+구매원가 템플릿 변경 - 박준영
+항목 추가
+구조 변경
+견적/입찰 파트너사 공내역서 등록 및 업로드 - 민경태 (11/7)
+견적/입찰 공내역서 결과 조회 - 민경태 (11/7)
+견적/입찰 공내역서 구매원가 템플릿에 반영 - 민경태 (11/7)
+기성 실물량 정산 등록 및 업로드 - 채종욱
+기타 화면 변경
+예가산출
+견적/입찰
+구매오더
+기성/정산
+5. 다자간계약 자재별 파트너사 등록
+견적/입찰 자재별 파트너사 등록 - 민경태 (10/31)
+계약 자재별 파트너사 등록 - 최성욱 (11/13)
+구매오더 자재별 파트너사 등록 - 채종욱
+기성 파트너사별 금액 등록 - 채종욱
+마감 파트너사별 분리 - 채종욱
+6. 도급계약 - 최성욱
+사전협의 화면 분리 (11/7)
+구매부서 계약 확정 기능 (11/7)
+지급보증 화면 개발 (11/7)
+일괄계약 업로드 (11/7)
+SLA 평가 - 권미영 (11/7)
+
+셋업 및 설정
+1. 자재분류
+자재분류 적용 (자재그룹 → 자재분류) (11/3)
+소싱분류 재 매핑 (미정)
+2. 신규 자재 연계
+자재분류/평가클래스/자재유형 자동 매핑 (11/3)
+3. 파트너사 변경 연계 (11/7)
+파트너사 가입
+파트너사 내부 등록
+파트너사 신규/변경 연계
+4. 운영서버 셋팅 (11/7)
+운영서버 이중화 - 완료
+스케줄러 DB 적용
+검색엔진 이중화 셋팅
+5. 보증보험 연계
+JAVA 버전 최신 적용으로 인한 인증서 못 읽음 (미정)
+
+기타 개발
+1. 품의
+구글시트로 관리
+2. 알람
+구글시트로 관리
+3. 대시보드
+구매부서
+검토부서
+도급업무
+일반사용자
+파트너사
+4. 문서별 첨부파일 내역
+견적/입찰
+계약관리
+계약내역변경
+기성청구
+송장관리
+5. 일반구매 - 현장설명회
+
+
+
+기성/정산
+- 공내역서가 있으면 기성요청금액을 직접 수정할 수 없다.
+- 공내역서 엑셀에 대한 안내 문구 삽입.
+- 파일 업로드 시, 명시적으로 버튼을 눌러 업로드하도록 수정.
+- 계약 수량까지 컬럼 고정(엑셀 파일도 마찬가지)
+- 그리드 컬럼들의 길이를 줄임.
+- 같은 그룹으로 묶인 컬럼들을 숨김 토글 처리.
+- 공내역서 합산 금액이 기성요청금액(파트너사 측)/기성조정금액(구매 측)으로 입력되도록 수정.
+- 추가 파트너사 항목 추가.
+- 품의 폰트를 맑은 고딕으로 변경.
+- (파트너사 측) 기성요청금액이 확정금액에 적용되지 않도록 변경
+- 금액정산일 경우 공내역서의 금액 수정을 막는다.
+- 물량정산일 경우 기성요청금액 수정을 막는다.
+- 기성/정산 생성 시 공내역서 합산 금액의 값을 파트너사 공내역서 합계로 수정.
+- (파트너사 측) 요청 수량과 금액을 입력해도 정산검토 측에는 입력되지 않도록 수정.
+- 기성/정산 첨부파일이 있어야 기성청구가 가능하도록 수정.
+    - 대상: 금회 기성 첨부파일
+    - 리스트에도 기성/정산 첨부파일 항목을 추가
+- 이전 차수의 정산방법이 물량정산이 아니면 정산 방법을 선택할 수 있도록 변경.
+- 단가 항목을 추가.
+- 선행 차수의 진행상태를 체크하는 로직을 신규 버튼 클릭 시로 변경.
+- 자재/공내역서 그리드에 기 정산 수량/금액 항목 추가.(엑셀 양식에도 포함)
+    - 공내역서의 경우 해당 라인에서 이미 진행된(공내역서의 구매원가 코드(공종코드)가 일치해야 한다) 정산검토 수량의 합이 필요하다.
+        - 우회로: 같은 PO를 공유하는 다른 SE로부터 정산 수량의 합을 가져온다.
+- 기 선급금(금액정산)/기 선급금 반제 항목 추가.
+
+
+-- 박준영(매트릭스투비) 채종욱(매트릭스투비) 자산인 경우에만 시리얼 여부 y로 가능하게 변경할것  -- 이영상차장님 조치 아이템분류로 배치로 자동 값 입력시킴 - 완료
+
+-- 세금계산서 폐기 관련 후처리가 없음. - 임시저장으로 변경 처리 - 완료
+
+-- 자산 시리얼 번호 - 자사 시리얼 관리건은 필수로 입력 받아야됨.(입고에서 필수, 차량은 차대번호 필수,  납품에서는 입력 가능하게만 열어줌) -- 완료
+
+-- 자산 시리얼 관리 건은 A, 이면서 투자오더 C 로 시작?? -- 완료
+
+
+기성/정산  ----------- 완료
+- 기성 반려 기능 추가
+: 반려된 건은 접수 상태값과 동일한 프로세스로 인지 할 것
+- 승인/승인취소/반려는 구매팀 전용으로
+  -- 구매팀 반려는 반려할 경우 , 파트너로 넘어감.
+     -- 선금급은 품의가 없음으로 구매팀(4개부서) 이 바로 파트너로 반려가 됨. 
+	 -- status 상태값(품의반려) 도 추가로 필요, 구매부서반려사유 컬럼도 추가 필요. -- 완료
+	 -- 선급금여부로 - 선급금일 경우 - 품의 없이, 실물량정산일 경우 품의 필수. 
+
+
+
+-- 기성건은 차수별로 진행이 완료 되어야 다음 차수를 진행 할 수 있음. ( 대상에서 등록시 이미 만들어 져있는 문서인지 체크로직 필요 ) -- 서원섭님 진행중. - 완료 
+
+-- 송장 승인요청 인터페이스가 저장을 한번 해야지 작동이됨. -- 저장 이후 승인요청 버튼이 보이게 변경 완료.
+ 
+-- mm tax 필수가 벨리데이션 추가 -- 완료 
+
+-- 매입계산서 계산서 번호 수기로 입력하고 승인 처리 되어야함.(정발행 케이스로 일때만 매핑하거나 수기로 입력하거나) -- 완료
+
+-- 품의 저장한다음에 재조회 되지 않음.  -- 진행중(서원섭님) -- 솔루션 자체가 실시간 지원되지 않음.
+
+--발주대상 헤더 기준으로 조회가 되어야함. 아니면 하나만 고르면 그룹으로 묶여야됨. -- 완료 검증 필요
+
+
+내자조달 > 발주관리 > 발주대상 [/srm/mm/po/MM_PO0100_01L]     -- 완료
+    - 동일 견적/입찰/계약을 합하여 구매오더 발생할수 있도록 수정
+    - 중복 데이터 생성 금지
+
+
+SELECT POI.PR_D1_UID,
+       COUNT(1)
+  FROM MM_PO_D1 POI
+ WHERE POI.ACTV_FLAG = 'Y'
+   AND POI.PR_D1_UID IN (
+SELECT PR_D1_UID
+  FROM MM_PO_D1
+ WHERE ACTV_FLAG = 'Y'
+   AND PO_H_UID = ?)
+ GROUP BY POI.PR_D1_UID
+HAVING COUNT(1) > 1
+;
+
+-- 기성 스케쥴 추가 버튼 숨기기 -- 완료 
+
+
+-- 선급금은 품의 올리지 않고 승인 처리되게 함. -- 완료
+
+-- 송장 발송에서 에러발생시 재전송 버튼 필요. -- 완료
+
+
+ -- 세이프빌 품목 라인수 및 아이템 항목 인터페이스 되어야함. -- 완료 무시
+ 
+ 원섭아 매입계산서 화면 역발행일 경우에만 세금계산서 팝업링크 되게 걸어줘  -- 완료
+ 
+ 원섭아 파트너 포탈 반품 건 반품 처리되고 나서 리스트에서 입고로 표시됨.. 반품으로 표되어야함. 코드값읽는게 아니고 값을 세팅 해줘야됨 -- 완료
+ 
+ 이어카운트  SAP 전표번호	5100000058 송장에 뒤에꺼 번호로 보내줘야됨. -- 완료 
+
+ -- 정발행건 쿼리 이터널 에러 수정. -- 완료 , 날짜 포멧팅 확인 해봐야함. -- 완료 
+ 
+ 
+3858500418 / 40045324
+1338138940 / 41002416
+1248614309 / 41028307
+1248602593 / 40026753
+6878100785 / 40053281
+1308164148 / 40089782
+1338141668 / 41002636
+2118688070 / 41003710
+2048116817 / 41005621
+1298142523 / 41042966
+ 
+5068147180 / 41053238 	(주)동양엘앤피  
+1098112587 / 41002068  	광명특수인쇄(주)
+ 
+ 
+ -- 계산서 발행관련 세이프빌에서는 알림이 어떻게 되는지 세이프빌에서.. -- 서명요청 알림메일 자동 발송됨. --완료
+	
+ 
+ -- 계약 건별로 발주 될수있게  - 그룹핑을 다르게...  --완료
+ -- 계약 발주명이 보이지 않음, - 계약명으로 디폴트 세팅 요청. -- 완료
+
+ -- 파트너 포탈 - 기성 상세 화면 요청 금액이 발주금액의 퍼센트와 상이함 -- 취소
+
+ 
+ -- 입고 대상에서 저장-확정-입고 입고 상셍 화면에 입고 버튼 추가 요청. -- 완료
+    
+ -- IF 세금계산서 발행 날짜는 지정된 날자여야 되는데 금일 날자로 되는것 같음.  인터페이스 날짜 확인. 필요. -- 완료
+  
+ 
+ -- 전저갈재 이어카운트 제목은 적요로 적용 해주세요. - 완료
+ 
+ -- 송장 지급방법, 지급조건 필수 -- 완료
+
+ -- 송장 취소??? 실제 취소가 되는게 아니다???  -박한영 이사님 문의 필요...  -- 현재 프로세스로 처리 함.-- 완료
+ 
+ 
+ SUBSTR(문자열, 1, 4) || '-' || SUBSTR(문자열, 5, 2) || '-' || SUBSTR(문자열, 7, 2)
+ 
+ ----- pr 에 코스트 센터가 pod1 생성시 따라가지 않았음.
+ 
+ edit mm_po_h
+where po_no = 'PO25100044'
+
+
+
+edit mm_po_d1
+where po_h_uid = '507995'
+
+
+SELECT * FROM mm_pr_d1
+where pr_d1_uid = '1012639'
+
+-----
+
+-- PO D1 코스트 센터 날라감.  -- 완료
+-- 기성 정산 현황 다중건 삭제 제대로 삭제 되지 않음.  --완료 
+-- 기성 상세 화면 금액 이상함.  -- 완료
+   -- 여러줄 나옴.
+-- 기성정산 현황 - 라인이 두개가 나오는데 금액이 이상함. 등록할때 금액을 수정 하기도 했는데 이상함. -- 완료
+ 
+-- 입고 합산 금액이 이상함. -- 완료 
+
+-- 세이프빌 상세화면 조회 보이지 않음. -- 완료 
+
+ 
+
+발주관리 상세하면 컬럼 추가    -  완료
+ - 투자오더번호 - wbs_code
+ - 계정지정범주 - a,f,k 
+
+
+
+EDIT MD_SUPPLIER_COMPANY
+where supplier_code = '40089782'
+
+VAT RATE 값 있어야됨.
+
+
+-- 변경 계약 관련 검증 로직 필요.
+
+ -- 기성 진행중 미입고건 여부, 납품 진행중 미입고건 , 입고 데이터 생성 미입고 건
+ -- 입고 수량 조회 되어야함.
+ 
+
+ -- 변경 계약 진행중인경우,
+    - 기성생성 금지, 납품생성 금지, 입고 생성 금지.
+    - 기존 입고건 취소 금지. 
+
+
+--계약 변경
+  변경건 최종 건 확인 필요? 
+ -- 기성 변경 계약이 없음.
+    -- 하단에 보이는것도 없음. 
+
+-- CT_D7 완료된 기성건이면, CLO 상태값으로 처리 해줌.
+
+
+ -- 실물량 정산 공내역서 
+     - 성급금 건이 있음. 잔액관리???  -- 완료 
+     - 	 
+
+-- 입고 담당자 필드가 비어 있음. 확인 필요.  -- MI user id 로 이름 조회처리  -- 완료
+
+-- 송장 후처리 전표 전송 전표번호가 들어오지 않음. e 어카운트
+
+- 기성 품의서 잔금에 -  기성정산 잔금이 들어가는 걸로 보임. 잔금 케이스 일때 계산되서 0 원이 되어야 함. 
+
+
+mm_pv_h -- company_user 안들어감.  --서원섭 완료 
+
+이어카운트 
+header.BP_CODE 사업영역
+header.BP_NAME 사업장명 
+추가해줘야됨.
+-- 회사관리, 100 링크 클릭, 사업장정보
+
+
+--송장 품의 관련 
+
+박한영이사님
+--발주 인터페이스 
+----자산 및 투자오더건은 납기일 필수로 체크 필요해요.
+
+마감에서 다중건 승인 처리 가능 이야기 나옴.  
+
+-- 기성은 차수별로 진행이 완료 되어야함. 나머지 막혀야됨.
+
+박준영(매트릭스투비) 2025-09-11 오전 9:47 • moin 계정
+결재비번은 id 
+비번 1234
+부서 아이디 이름 moin id
+43300 21401274 김성민 21401274
+43300 21100916 박지은 21100916
+43300 20600150 이주홍 20600150
+43400 20210217 김범수 20210217
+43300 20101481 김지선 20101481
+61000 20101096 최유성 20101096
+34400 21101201 전진철 21101201
+34400 19711014 정승재 19711014
+34200 20220030 정수윤 20220030
+
+### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: ORA-01400: cannot insert NULL into (""LGLPCM"".""MM_TAX_H"".""SUPPLIER_BUSINESS_ITEM"")
+-- 해당 값은 마스터에서 업종과 동일한 값으로 처리함.
+
+### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: ORA-01400: cannot insert NULL into (""LGLPCM"".""MM_TAX_H"".""SUPPLIER_EMAIL"")
+-- 해당 값은 화면에서 체크를 해줘야 됨.
+
+### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: ORA-01400: cannot insert NULL into (""LGLPCM"".""MM_TAX_H"".""COMPANY_EMAIL"")
+-- 해당 값은 ....
+
+우선 임의데이터로 지금 계속 찾아 넣고, 추후 MM_TAX_H 테이블 필수 값은 화면에서 체크로직 추가 하겠습니다.
+
+*********** 
+
+
+ ,MAX((SELECT PLANT_CODE FROM MM_PO_D1 SUB_POD1 WHERE SUB_POD1.PO_D1_UID = MPD1.PO_D1_UID AND ROWNUM = 1))          AS PLANT_CODE
+,(SELECT SC.PAYMENT_METHOD_CODE FROM MD_SUPPLIER_COMPANY SC WHERE SC.CLIENT_CODE = MPH.CLIENT_CODE AND SC.COMPANY_CODE = MPH.COMPANY_CODE AND SC.SUPPLIER_CODE = MPH.VENDOR_CODE AND SC.ACTV_FLAG = 'Y' AND ROWNUM = 1) AS PAYMENT_METHOD_CODE
+,(SELECT SC.PAYMENT_TERMS_CODE FROM MD_SUPPLIER_COMPANY SC WHERE SC.CLIENT_CODE =  MPH.CLIENT_CODE AND SC.COMPANY_CODE = MPH.COMPANY_CODE AND SC.SUPPLIER_CODE = MPH.VENDOR_CODE AND SC.ACTV_FLAG = 'Y' AND ROWNUM = 1) AS PAYMENT_TERMS_CODE
+,(SELECT SC.PAYMENT_BLOCK_CODE FROM MD_SUPPLIER_COMPANY SC WHERE SC.CLIENT_CODE =  MPH.CLIENT_CODE AND SC.COMPANY_CODE = MPH.COMPANY_CODE AND SC.SUPPLIER_CODE = MPH.VENDOR_CODE AND SC.ACTV_FLAG = 'Y' AND ROWNUM = 1) AS PAYMENT_DELAY_FLAG
+,(SELECT SC.VAT_CODE FROM MD_SUPPLIER_COMPANY SC WHERE SC.CLIENT_CODE =  MPH.CLIENT_CODE AND SC.COMPANY_CODE = MPH.COMPANY_CODE AND SC.SUPPLIER_CODE = MPH.VENDOR_CODE AND SC.ACTV_FLAG = 'Y' AND ROWNUM = 1) AS VAT_CODE
+,(SELECT SC.VAT_RATE FROM MD_SUPPLIER_COMPANY SC WHERE SC.CLIENT_CODE = MPH.CLIENT_CODE AND SC.COMPANY_CODE = MPH.COMPANY_CODE AND SC.SUPPLIER_CODE = MPH.VENDOR_CODE AND SC.ACTV_FLAG = 'Y' AND ROWNUM = 1) AS VAT_RATE
+,MAX((SELECT TAX_H_UID FROM MM_TAX_H SUB_TAX WHERE SUB_TAX.PV_H_UID = MPD1.PV_H_UID AND SUB_TAX.ACTV_FLAG = 'Y' AND ROWNUM = 1))          AS TAX_H_UID
+
+PAYMENT_METHOD_CODE
+PAYMENT_TERMS_CODE
+PAYMENT_BLOCK_CODE
+
+MD_SUPPLIER_COMPANY VAT_CODE 값 기본 세팅 되는지 확인 필요... -- 완료 51로 하기로함
+
+-- 입고 대상 조회시 금액이 발금즘액으로 되는거 같음. 확인필요 -- 완료
+MD_SUPPLIER - SUPPLIER_BUSINESS_ITEM	-- 완료 - 재료로 값으로 함.
+
+송장 자동 생성후 , 인터페이스 스텝 확인 해봐야됨. -- 확인 추가 필요 erp sap 번호 날라가지 않음. 	
+
+
+updateEntity.setIfMessage(sapRcvMessage.getBytes().length > 999 ? new String(sapRcvMessage.getBytes(), 0, 999 ) : sapRcvMessage);
+-- PO 확정 인터페이스 메세지저장 로직 진행중
+
+
+-- 기성 파트너 포탈 
+   금액이 기성 금액과 상이함. 
+   선급금일때 수정이 되지 않음.
+
+
+-- 기성 구매포탈 
+   현황 조회 정산 담당자
+   
+   ,PRH.COMPANY_USER_ID AS SE_USER_ID
+   
+
+-- 개발서버 로그 위치 
+/app/log/srm
+
+tail -f /app/log/srm/nohup.srm01.out
+tail -f /app/log/srm/nohup.srm02.out
+
+
+datasource-type: pool
+dbms-type: oracle
+jdbc-url: jdbc:log4jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.134.242.198)(PORT=1523))(ADDRESS=(PROTOCOL=TCP)(HOST=10.134.242.199)(PORT=1523)))(CONNECT_DATA=(SERVICE_NAME=PSPCMDBS)))
+username: SVCPCM
+password: "YTAyVitrK2JENWE2Umk1U2YwZ1FrVkhPWTNVWUlITy8" # 운영
+driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+maximum-pool-size: 5
+
+툴 - DEVPCM
+was - SVCPCM
+
+DB접속정보 오라클 19c
+
+DB명 : DSPCMDBS
+서버IP : 10.134.254.185
+포트 : 1522
+DB계정 및 PW : DEVPCM / Pcm_0209!
+
+DB명 : DSPCMDBS
+서버IP : 10.134.254.185
+포트 : 1522
+DB계정 및 PW : SVCPCM / Password1!
+
+DB명 : DSPCMDBS
+서버IP : 10.134.254.185
+포트 : 1522
+DB계정 및 PW : LGLPCM / Pcm_1208!
+
+C:\Users\JongWook\.gradle\caches\modules-2\files-2.1\com.oracle.database.jdbc\ojdbc8\21.5.0.0\eb13f0948ca8675f71d59b5e8a1129d4c6189e7a\ojdbc8-21.5.0.0.jar
+
+
+ERP 인터페이스 이슈 
+1.po_d1 에 ACCOUNT_CLASS_CODE 값이 들어가지 않았음. PR값 그대로 추가해줘야됨  -- 조치함
+2.PURCHASE_GROUP_CODE 구매그룹 필수값. -- 조치함
+3.IC.COMPANY_ITEM_CODE AS ERP_ITEM_CODE  아이템 코드는 구매포탈 시스템과 ERP 의 코드가 동일하다.
+4. map.put("BPRME", item.getStringValue("AMOUNT_UNIT")); /* PER 단위 */ per 에 대한 단위 값이 없음. 
+
+김태진(SKAX) 2025-09-29 오전 10:44 • 해당 필드는 .... MEINS와 유사한 필드인데
+KG 단위인 것 을 10KG 씩 묶어서 산다던가..할때 쓰는 필드입니다
+10000G 씩 산다던가..
+일반적으로 공백입니다
+
+
+-코스트 센터 값 유무
+단기자산 / 비용구매일때만 사용할 것 같습니다
+
+자재코드 샘플 이걸로 해보세요
+
+자산 : 41100017-0001 (정렬기 (3M))   단위 : 대
+투자 : 31110001-0001 (전기공사)         단위 : 대
+코스트센터 : 410101-000001 (동복(잠바형))   단위 : EA
+
+
+투자오더 샘플 번호입니다.  (AUFNR)
+예산이 많지 않으니 적정 금액으로 테스트 하시기 바랍니다
+
+단기자산구매 투자오더 : CL1250501001 (100만) / CL1250501002 (200만)
+장기구매 투자오더 : IL3250201001 (1천만) / IL3250201002 (2천만)
+
+
+
+김태진(SKAX) 2025-09-29 오후 2:20 • ebelp 가 00010 으로 들어오고 있었는데
+00001 단위로 주셔야 합니다
+생성할때도 마찬가지 입니다. 
+
+-- po 번호 1번부터 생성해야됨.  조치함
+
+-- dl 이 있는경우만 자산 관리 하나?? 발주에서 바로 입고로 오는 케이스는 자산 데이터가 없음.
+
+
+송장 취소 조회 S 인데 XELNR 값이 없는거죠? 알겠습니다. 
+
+
+
+---------------------------------------------------------
+-- 발주확정 바로 처리시  UID 로 조회 하지 않아서 중복 발생됨  --- 조치완료
+
+
+- 파트너 포탈
+  기성 등록 조회 - 수주일 - 지금 예정일로 처리해야됨  -- 조치 완료
+    
+  팝업창 창별로 단가들 다 깔아줘야됨.
+  
+  -- 기성청구 버튼 바로 눌렀을때 오류가남. -- 수정
+   -- 키중복 오류발생했음.
+   
+   
+   -- 기성현황 정산담당자 컬럼으로 조회가 안됨.
+   
+   팝업에서 계약금액 그룹표시
+   
+   기성스케쥴에 현재 기성건에 대해서 표시 해줬으면 한다. -- 조치완료
+   기성조정금액 두번변경시 금액이 이상해짐.   -- 조치 완료 
+   
+
+
+
+1.기성 정산 승인 경우 , 승인 반려 - 접수반려 상태가 되는데 접수 반려에서 파트너가 다시 기성 요청할 경우 품의서는 신규? 아님 기존건?? 아니면 품의서 반려??
+
+
+99001349
+비번 (비밀번호)
+1qaz2wsx!@ -> qazwsx12!@ -> 2wsx3edc@# ( rfvtgb45$% )
+
+-- 공내역서 참조 
+예가산출 - 품목건수에 팝업 되어있음.
+
+--safeb
+http://devsafebill.lcn.co.kr/ill
+
+
+기능 추가  - 반려기각 버튼 추가, 반려폐기 버튼 필요. 050상태에서만 - 폐기요청가능 버튼추가
+
+
+2280817013/ 100000062 / sys1234!@#$
+
+개발기 운영 소스 구분 해야됨.
+
+//운영이 아닐 경우 ssl 인증서 무시
+        if (!CommonUtil.getActiveProfile().startsWith("prd")) {
+		
+		}
+
+
+
+ KeyEncryptor keyEncryptor = BeanUtil.getBean(KeyEncryptor.class);
+        String pass = "SAFETAX!!00";
+        String enc = keyEncryptor.encryptWithUser(pass, null);
+        //System.out.println(enc);
+        System.out.println(keyEncryptor.decryptWithUser(enc, null));
+
+
+WVRENjVNb2krYmx5SGMzZFJNaTBmaW5UbGtxWGtEc2U
+M2B_RFC01 / Lotteinterface1!
+
+세이프빌 DB 접속 정보 전달드립니다.
+
+
+개발
+
+
+ID / PW : safetax / safetax!!00
+
+
+DSFIMDBS =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 10.134.254.37)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = DSFIMDBS)
+    )
+) 
+
+
+운영
+
+
+ID / PW : safetax / SAFETAX_1028
+
+
+PSFIMDBS =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 10.134.247.71)(PORT = 1521))
+(ADDRESS = (PROTOCOL=TCP)(HOST=10.134.247.72)(PORT=1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = PSFIMDBS)
+    )
+)
+
+
+웹로직 콘솔
+http://10.134.254.184:8801/rconsole
+
+lglwls
+lglwls!2626
+
+
+
+
+--moin
+https://devewf.lotte.net/
+
+moin 계정
+결재비번은 id 
+비번 1234
+부서       아이디       이름      moin id
+43300    21401274    김성민    21401274
+43300    21100916    박지은    21100916
+43300    20600150    이주홍    20600150
+43400    20210217    김범수    20210217
+43300    20101481    김지선    20101481
+61000    20101096    최유성    20101096
+34400    21101201    전진철    21101201
+34400    19711014    정승재    19711014
+34200    20220030    정수윤    20220030
+
+
+
+--세금계산서 
+폐기요청, 마이너스 계산서
+
+--기성정산 수정 필요
+ - 그리드 컬럼 수정 , 금액 수정
+
+-- 250717 업무 리뷰
+
+
+오더수량, 오다단위, 오더분모, 오더분자 숨김.
+
+
+미납현황 안나옴 파트너 
+납품현황 - 클릭 상세 화면 일자는 시분초 제외 시킴
+        - 우클릭 메뉴 안되게.
+
+납품관리 - 수주번호 여려개 콤마로 보여줌. 
+        - 박스태그관리 버튼 삭제.
+
+납품서햔황 - 박스태그관리 버튼 삭제.
+          - 상세 그리그 성적서 내용 확인
+
+
+납품대금지금 - 강제승인 버튼 , 강제승인 취소 버튼
+
+매입계산서  - 송장정보탭 삭제 
+          - 하단 제품 상세리스트로 변경.
+          -상세화면에서 정발행 역발행 선택하고 저장할 수 있어야됨.
+		  
+송장대상이 계산서와 1:1  메인화면 바꿔야됨. 한건씩만 등록 가능 
+    상세 화면 -  문서 종류는 물류송장 한개만 사용.
+	            업체정보 다 수정 금지
+				트랜젝션 송장 하나만.
+				지급조건명이 최초 안나옴.
+
+
+협력업체 -> 파트너사코드 , 파트너사명
+
+
+송장관리 - 송장 전송 IF 기능 필요.
+          송장 전송 취소 IF 필요. 
+
+
+기성화면에 , 입고 출력물 준공 예정.
+
+
+
+
+- 납품대금지급 확정
+    - 마감번호 길이 늘림
+    - 강제승인 기능 추가.
+- 매입계산서
+    - 송장정보 탭 비활성화
+    - 자재정보 링크는 송장정보 대신 자재정보를 보여주도록 변경.
+        - 매입계산서가 송장 기반이 아닌 납품대금지급 기반으로 만들어지기 때문에 조회가 안 됨.
+    - 정발행/역발행을 변경 가능하도록 수정.
+- 송장대상
+    - 세금계산서 헤더 단위로 조회되어야 함.
+    - 세금계산서와 1:1로 송장을 만들 예정.
+    - 통화가 조회 안 됨.
+        - 이전 단계에서 통화가 누락되었는지 확인.
+    - 송장 생성 시 지급조건 명칭이 나오지 않음.
+- 송장관리
+    - 문서종류는 물류송장만 남기고 비활성화.
+    - 업체정보는 전부 읽기 전용으로.
+    - 트랜잭션은 송장만 남김.
+    - 송장 인터페이스/ 송장취소 인터페이스 기능 추가.
+
+
+
+반품대상 관리 - 납기 시간 칼럼 숨김.
+        상세 ERP 입고 번호 숨김.
+		입고평가 탭 삭제
+
+
+파트너 반품 작성 안보이게
+      전표번호, 전표기표일, 구매담당자 삭제
+	  협력업체 링크 삭제.
+	  
+	  
+	  물량반품 대체는  납품이 다시 가능 한 상태임
+
+
+납품 건수 마감때 반품건도 잡히는걸로 보임. 
+
+그리드의 금액은 썸을 추가.
+
+입고 수량 변경시 금액 재계산 안됨.
+
+
+
+국세청 승인 번호 필수값 제외
+
+
+TAX_INVOICE_TYPE > TAX_ISSUE_TYPE > TAX_INVOICE_METHOD
+
+	  
+파트너사로 TAX_ISSUE_TYPE 을 기본으로 끌어오는 로직 변경
+	
+------------------------
+
+- 공통
+    - 협력업체 -> 파트너사 로 명칭 변경.
+	  협력업체코드 -> 파트너사코드
+        - 다른 화면도 마찬가지.
+    - 분자, 분모, 오더수량, 오더단위 항목 숨김
+<grid:column_num   id="QUANTITY"                  name="오더수량"       edit="<%=GridEditType.READ_ONLY%>"      align="right"   width="100"  formatter="<%=FMTType.QTY %>"   fillZero="false" point="3"/>
+<grid:column_txt   id="QUANTITY_UNIT"             name="오더단위"       edit="<%=GridEditType.READ_ONLY%>"      align="center"  width="080"  />
+<grid:column_num   id="DENOMINATOR"               name="오더단위 분모"  edit="<%=GridEditType.READ_ONLY%>"      align="right"   width="100"  formatter="<%=FMTType.QTY %>"   fillZero="false" point="3"/>
+<grid:column_num   id="NUMERATOR"                 name="오더단위 분자"  edit="<%=GridEditType.READ_ONLY%>"      align="right"   width="100"  formatter="<%=FMTType.QTY %>"   fillZero="false" point="3"/>
+	
+	
+    - 그리드에서 금액 관련 항목들은 하단에 sum 데이터를 추가.
+	
+	sumExpr="<%=SumExpr.SUM%>"
+	
+- 구매요청접수
+    - 비연단가의 경우, 바로 발주작성을 시도하면 비연단가는 발주를 직접 작성할 수 없다는 메시지를 띄워야 한다.
+    - 발주 생성 시, 구매그룹의 코드가 401이 삽입되어 있는데, 이 코드가 공통코드에는 없음.
+- 발주관리
+    - 발주 작성 시 입고담당자 정보는 구매요청으로부터 넘어와야 한다.
+- 수주관리
+    - 리포트에서 금액과 경계선 사이에 간격을 부여.
+    - 리포트의 폰트를 맞추던가, 아니면 고딕 계통의 폰트를 사용할 것.(ex: 맑은 고딕)
+    - 확정 시도 시 인터페이스 상태를 보여줘야 한다.
+    - 수주번호는 화면에 전부 드러나야 한다.
+        - 현재는 임의로 ERP_를 삽입하고 있어 사이즈가 모자란 상태.
+- 납품현황
+    - 일자 항목은 시분초를 화면에서 제외. -
+    - 오른 클릭 시 나타나는 서브메뉴 숨김. -
+- 납품대상
+    - 납품 생성 시 전화번호를 가져오지 못함.
+    - 자재 측 입고담당자와 배송지 정보를 다시 보여주도록 변경.
+    - 납품 포장 정보는 원래 제조측에서 사용하는 정보.
+- 납품관리
+    - 박스태그 출력 기능 비활성화
+    - 수주번호가 여러 개가 보일 수 있도록 수정.
+- 준공/입고 출력물 필요.
+    - 기성/정산 측에 달릴 것으로 추정. (확정되지 않음)
+    - 실물량 정산 자료는 굳이 출력물에 추가하기보단 그리드로 보여주는 대안을 고려.(확정되지 않음)
+- 납품서현황
+    - 박스태그 출력 기능 비활성화
+    - 구매담당자가 아니라 입고담당자 기준으로 조회해야 함. (확정되지 않음)
+- 납품서 자재별 현황
+    - 성적서는 어디서 흘러들어 왔는지?
+        -> 자재관리의 성적서 첨부파일을 참조함.
+		
+	 lbx_labels="작성|확정|반품|반품취소" lbx_values="ENT|CFM|COM|CNL" />	
+		
+- 입고대상
+    - 구매담당자가 아니라 입고담당자 기준으로 조회해야 함. (확정되지 않음)
+- 입고관리
+    - 입고담당자 LOV가 변경될 예정. (확정되지 않음)
+        - 기본값은 자기 자신만 조회될 것.
+    - 입고 수량 수정 시, 금액도 같이 수정되도록 한다. -
+- 납품대금지급 확정
+    - 마감번호 길이 늘림
+    - 강제승인 기능 추가.
+- 매입계산서
+    - 송장정보 탭 비활성화
+    - 자재정보 링크는 송장정보 대신 자재정보를 보여주도록 변경.
+        - 매입계산서가 송장 기반이 아닌 납품대금지급 기반으로 만들어지기 때문에 조회가 안 됨.
+    - 정발행/역발행을 변경 가능하도록 수정.
+- 파트너사 현황
+    - 정발행/역발행 항목 추가 (확정되지 않음)
+- 송장대상
+    - 세금계산서 헤더 단위로 조회되어야 함.
+    - 세금계산서와 1:1로 송장을 만들 예정.
+    - 통화가 조회 안 됨.
+        - 이전 단계에서 통화가 누락되었는지 확인.
+    - 송장 생성 시 지급조건 명칭이 나오지 않음.
+- 송장관리
+    - 문서종류는 물류송장만 남기고 비활성화.
+    - 업체정보는 전부 읽기 전용으로.
+    - 트랜잭션은 송장만 남김.
+    - 송장 인터페이스/ 송장취소 인터페이스 기능 추가.
+- 반품 대상 관리
+    - 납기요청일 항목 숨김
+    - ERP 입고번호 항목 숨김.
+    - 입고평가 탭 숨김.
+- 입고 부적합 현황
+    - 승인/반려 상태값 및 기능 추가.
+    - 상태값에 대해 보여주는 이름 변경.
+    - 상태값 제한 검색조건을 추가.
+    - 반품정보, 전표번호, 전표기표일, 구매담당자 항목 숨김
+    - 협력사 정보 숨김.
+    - 반품 시 물량대체임에도 납품대상에 나타나지 않는 문제 수정.
+- 납품대금지급 확정
+    - 납품대금지급의 자재에 입고와 반품 건이 같이 들어가 있는 문제 수정.
+        - 반품 건은 제외.
+- 세금계산서
+    - TAX_INVOICE_TYPE 대신 TAX_INVOICE_METHOD를 정발행/역발행 구분 필드로 사용.
+        - MD_SUPPLIER_COMPANY에서 데이터를 가져온 것이 세금계산서로 이어졌음.
+    - 국세청 승인 번호를 필수값에서 제외
+
+
+KeyEncryptor keyEncryptor = BeanUtil.getBean(KeyEncryptor.class);
+    	System.out.println(keyEncryptor.encryptWithUser("SCRAPTAX_20191114", null));
+
+
+--------------------------------------
+1 조직 세팅 4개 
+2 자재 연단가 구분이 필요함..
+3 
+
+--add-exports=java.base/sun.security.action=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED
+
+
+반품관련 
+
+납품 기준으로만 수량 계산
+납품 - 입고 수량 
+
+입고(반품) 수량 변경 가능하게 조치
+
+CLAIM_CLASS_CODE	73			Y	VARCHAR2 (10 Byte)		클레임 유형코드 ( DU:서류하자 , QA:품질하자 , QT:수량부족, PA:패킹불량, SP:규격상이, IC:인도조건불이행, SH:선적불이행, ET:기타
+CLAIM_PROCESS_CLASS_CODE	74			Y	VARCHAR2 (10 Byte)		클레임 유형코드 (S:물량환수처리, F:회계정산, O:물량대체-발주수량에반영하지않음, ET:기타 )
+DESCRIPTION	75			Y	VARCHAR2 (2000 Byte)		반품 기타사유
+
+
+
+
+    @Size(max=10)
+    @Column(name="CLAIM_CLASS_CODE", label="클레임 유형코드 ( DU:서류하자 , QA:품질하자 , QT:수량부족, PA:패킹불량, SP:규격상이, IC:인도조건불이행, SH:선적불이행, ET:기타")
+    private String claimClassCode;
+    @Size(max=10)
+    @Column(name="CLAIM_PROCESS_CLASS_CODE", label="클레임 유형코드 (S:물량환수처리, F:회계정산, O:물량대체-발주수량에반영하지않음, ET:기타 )")
+    private String claimProcessClassCode;
+    @Size(max=2000)
+    @Column(name="DESCRIPTION", label="반품 기타사유")
+    private String description;
+
+
+--- 기성정산 스텝 
+
+파트너 포탈 기성정산 - 기성청구 
+> 구매포탈로 요청건으로 들어옴.
+> 구매포탈에서 접수처리. > 상세화면에서 승인반려 가능함.
+
+
+
+
+구매요청 자산- 일경우 WBS 코드C 로시작되는경우. 발주시!
+
+MM_PR_D1 - ACCOUNT_CLASS_CODE = 'A'
+WBS_CODE LIKE 'C%'
+
+
+-- 납품 관련 알림 기능 필요.
+
+--
+기성 준공(잔금)건에 한해서 입고 조회 될수있게 
+
+
+-납품 1 : 입고 1: 반품: 1 
+1=1 매핑
+
+
+-- 종결및반품관리
+
+
+납품수량 변경기 수주수량이 변경됨.
+
+
+CLAIM_PROCESS_CLASS_CODE 클레임 유형코드 (S:물량환수처리, F:회계정산, O:물량대체-발주수량에반영하지않음, ET:기타 )
+
+O:물량대체-발주수량에반영하지않음
+대체는 다시 주문 할 수 있는 수량임.
+
+나머지는 다시 반품이지만 입고수량으로 같이 잡히는거임.
+
+
+--- 입고 
+정산 관리자 필드 추가. 칼럼 추가 필요
+
+
+---- 발주대상 관련 
+
+SELECT * FROM MM_CT_H CTH
+WHERE CTH.ACTV_FLAG = 'Y'
+AND CTH.STATUS  = 'SDC'
+AND CTH.PRICE_TYPE_CODE  = 'CP'  /* 비연단가 */
+ORDER BY CT_SDC_DATE DESC;
+
+CT 는 PR, RX 필수
+
+SELECT RXH.*
+FROM MM_RX_H RXH
+           INNER JOIN MM_RX_D2 RXS
+                   ON RXS.RX_H_UID = RXH.RX_H_UID
+                  AND RXS.ACTV_FLAG = 'Y'
+           INNER JOIN MD_SUPPLIER SUP
+                   ON SUP.SUPPLIER_CODE = RXS.SUPPLIER_CODE
+                  AND SUP.ACTV_FLAG = 'Y'
+               --  AND NVL (SUP.ERP_CODE, 'N') != 'N'
+           INNER JOIN MM_BD_H BDH
+                   ON BDH.RX_H_UID = BDH.RX_H_UID
+                  AND BDH.RX_D2_UID = RXS.RX_D2_UID
+                  AND BDH.ACTV_FLAG = 'Y'
+           INNER JOIN MM_BD_D1 BDI
+                   ON BDI.BD_H_UID = BDH.BD_H_UID
+                  AND BDI.BD_D1_UID =
+                      (SELECT MIN (BD_D1_UID)
+                         FROM MM_BD_D1 B
+                        WHERE B.BD_H_UID = BDH.BD_H_UID
+                          AND B.SEL_FLAG = 'Y'
+                      )
+           INNER JOIN MM_RX_D1 RXI
+                   ON RXI.RX_H_UID = RXH.RX_H_UID
+                  AND RXI.RX_D1_UID = BDI.RX_D1_UID
+                  AND RXI.ACTV_FLAG = 'Y'
+        LEFT OUTER JOIN MM_PR_H PRH
+                   ON PRH.PR_H_UID = RXI.PR_H_UID
+                  AND PRH.ACTV_FLAG = 'Y'
+         WHERE RXH.ACTV_FLAG = 'Y'
+           AND RXH.STATUS = 'CFM'
+           AND RXH.RFX_TYPE_CODE IN ('RQ', 'BD', 'RA')
+           AND RXH.CONFIRM_CT_FLAG = 'Y'
+           AND NOT EXISTS
+               (SELECT 1
+                  FROM MM_CT_H CTH
+                 WHERE CTH.RX_H_UID = RXH.RX_H_UID
+                   AND CTH.BD_H_UID = BDH.BD_H_UID
+                   AND CTH.ACTV_FLAG = 'Y'
+               )
+          AND    RXH.RX_CONFIRM_DATE >= TO_DATE('2025-07-13', 'yyyy-MM-dd') AND    RXH.RX_CONFIRM_DATE <= TO_DATE('2025-08-13 23:59:59', 'yyyy-MM-dd hh24:mi:ss');
+
+
+SELECT RX.STATUS, BD.STATUS, RX.RX_NO, RXS.SUPPLIER_NAME, RXS.SEL_FLAG , RXI.RX_LINE_NO, RXI.ITEM_CODE, BDI.SEL_FLAG , RX.SEL_METHOD_CODE
+FROM MM_RX_H RX
+INNER JOIN MM_RX_D1 RXI ON (RX.RX_H_UID = RXI.RX_H_UID AND RXI.ACTV_FLAG = 'Y')
+INNER JOIN MM_RX_D2 RXS ON (RX.RX_H_UID = RXS.RX_H_UID AND RXS.ACTV_FLAG = 'Y')
+INNER JOIN MM_BD_H BD ON (RXS.RX_H_UID = BD.RX_H_UID AND RXS.RX_D2_UID = BD.RX_D2_UID AND BD.ACTV_FLAG = 'Y' AND BD.STATUS = 'CFM')
+INNER JOIN MM_BD_D1 BDI ON (BD.BD_H_UID = BDI.BD_H_UID AND RXI.RX_D1_UID = BDI.RX_D1_UID AND BDI.ACTV_FLAG = 'Y')
+WHERE RX.ACTV_FLAG = 'Y'
+AND RX.RFX_TYPE_CODE IN ('RQ', 'BD')
+AND RXS.SEL_FLAG = 'Y'
+AND BDI.SEL_FLAG = 'Y'
+AND RX.STATUS = 'CFM' -- 업체선정
+ORDER BY RX.RX_H_UID DESC;
