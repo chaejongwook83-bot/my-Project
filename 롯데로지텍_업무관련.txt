@@ -5,7 +5,7 @@ APM -------- 모니터링
 https://10.134.242.161:8443/ 
 erpmon_apm/ erpmonapm123! 
 
-
+-- 파트너사 가입경로 구분 개발 해야됨.
 
 [입고현황레포트]
 - 기본값: 구매요청 담당부서, 구매부서 본인팀 조회,
@@ -13,9 +13,9 @@ erpmon_apm/ erpmonapm123!
 - 비용 건 누락
 - 투자오더번호 항목명 변경 : 괄호 삭제
 - 최종입고자 항목 추가 요청 : 입고현황 내 "수정자" 데이터
-(수정자가 최종 입고자의 개념이 맞는지)
+(수정자가 최종 입고자의 개념이 맞는지)   -- 입고시 수정 데이터는 비동기 식이라 사용자가 인식이 안됨, 마감시 플래그값 갱신처리 하면서 , 마감 등록 사용자로 갱신됨. ( 입고 등록자가 입고 처리하는게 아닌지? 우선 등록자로 처리 )
 - ERP입고번호 항목 추가 요청
-- 구매요청번호가 없는 건이 있음
+- 구매요청번호가 없는 건이 있음  -- 발주 마이그 데이터입니다.
 - 화면 내 합계 필요 (발주수량, 입고수량, 발주금액, 입고금액)
 
 [입찰현황레포트]
@@ -37,12 +37,16 @@ erpmon_apm/ erpmonapm123!
 (예가, 계약금액_최초, 예가대비 증감금액, 계약금액_최종, 정산금액)
 
 [단가이력]
-- 구매부서, 검토부서 전체 공통
+- 구매부서, 검토부서 전체 공통  화면권한부여 요청.
 
 [공내역서 단가 이력]
 - 계약이 완료된 상태의 공내역서에 한하여 레포트 표출 필요
 - 수량과 단위 데이터 값이 다르게 나오고 있음
 - 공내역서 문서번호 선택시 구글시트 상 노란색 음영 부분이 상세화면으로 나오는 것으로 최초 이야기 되었음 ㅠㅠ
+
+-- 현재 기준으로 상세 조회 리스트 유지.
+-- 규격명(물품명) 을 복수로 검색  -- 명에 , 들아가있어서 멀티로 검색이 안됨 우선 단건으로 처리. 연구소 문의 필요
+
 
 [sap 이관 데이터]
 - 기본 조회기간 값 20년 01월 ~ 25년 12월 고정 요청
@@ -1844,3 +1848,100 @@ AND RXS.SEL_FLAG = 'Y'
 AND BDI.SEL_FLAG = 'Y'
 AND RX.STATUS = 'CFM' -- 업체선정
 ORDER BY RX.RX_H_UID DESC;
+
+
+
+
+
+
+ 
+  안녕하세요. 
+ 
+ 
+  가입경로(JOIN_PATH) 입력 방식 변경 적용 방법입니다. 
+ 
+ 
+  
+ 
+ 
+ 
+  1) 적용 대상 파일 
+ 
+ 
+  - MD_PTR0100_11E.jsp 
+ 
+ 
+  - MD_PTR0400_11E.jsp 
+ 
+ 
+  - form.jsp 
+ 
+ 
+  
+ 
+ 
+ 
+  2) 변경 내용 (JOIN_PATH 입력 컴포넌트 교체) 
+ 
+ 
+  각 파일에서 아래 블록(가입경로 라인)을 찾아 entry:text(JOIN_PATH) 부분을 변경 후 소스로 교체해 주세요. 
+ 
+ 
+  
+ 
+ 
+ 
+  [변경 전] 
+ 
+ 
+  
+ 
+   
+<entry:line colspan="3">
+    <entry:label label="가입경로"  edit="<%=EntryEditType.NORMAL%>"  free="true" labelDirectionType="<%=LabelDirectionType.VERTICAL %>" />
+    <entry:input labelDirectionType="<%=LabelDirectionType.VERTICAL %>">
+        <entry:text     id="JOIN_PATH"              label="가입경로"            edit="<%=EntryEditType.NORMAL%>"      value="${JOIN_PATH}"  free="true"  showLabel="false" />
+    </entry:input>
+</entry:line>
+ 
+  
+ 
+  
+ 
+ 
+ 
+  [변경 후] 
+ 
+ 
+  
+ 
+   
+<entry:line colspan="3">
+    <entry:label label="가입경로"  edit="<%=EntryEditType.NORMAL%>"  free="true" labelDirectionType="<%=LabelDirectionType.VERTICAL %>" />
+    <entry:input labelDirectionType="<%=LabelDirectionType.VERTICAL %>">
+        <%--<entry:text     id="JOIN_PATH"              label="가입경로"            edit="<%=EntryEditType.NORMAL%>"      value="${JOIN_PATH}"  free="true"  showLabel="false" />--%>
+        <entry:selectProp  id="JOIN_PATH" label="가입경로" edit="<%=EntryEditType.NORMAL%>" value="${JOIN_PATH}" defaultValue="B" size="20" free="true" showLabel="false" >
+            <entry:property id="일반" name="일반" />
+            <entry:property id="신용평가사" name="신용평가사" />
+        </entry:selectProp>
+    </entry:input>
+</entry:line>
+ 
+  
+ 
+  
+ 
+ 
+ 
+  3) 참고(리스트 표시 관련) 
+ 
+ 
+  리스트에 가입경로 표시가 필요하면 조회 쿼리 및 필드 추가로 처리하면 될 것 같습니다. 
+ 
+ 
+  
+ 
+ 
+ 
+  감사합니다. 
+ 
