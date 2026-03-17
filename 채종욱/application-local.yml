@@ -1,0 +1,56 @@
+# local
+---
+spring:
+  profiles: local
+
+  datasource:
+    default:
+      datasource-type: pool
+      dbms-type: oracle
+      jdbc-url: jdbc:log4jdbc:oracle:thin:@10.134.254.185:1522:DSPCMDBS
+      username: SVCPCM
+      password: "TXlLQVg3WFFZeVp6a24rSFYyaSthM1B0YW9mMVBrdnc"
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      maximum-pool-size: 5
+    #     transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+
+    msuite4:
+      datasource-type: pool
+      dbms-type: oracle
+      jdbc-url: jdbc:log4jdbc:oracle:thin:@10.134.254.185:1522:DSPCMDBS
+      username: SVCPCM
+      password: "TXlLQVg3WFFZeVp6a24rSFYyaSthM1B0YW9mMVBrdnc"
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      maximum-pool-size: 5
+    #     transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+
+    scraptax:
+      datasource-type: pool
+      dbms-type: oracle
+      jdbc-url: jdbc:log4jdbc:oracle:thin:@10.134.254.37:1521:DSFIMDBS
+      username: SCRAPTAX
+      password: "Vld3SU1SMndlc0pWNVpOaStzREJtWFRwellMeXh5ei9uUFhweHoyS295az0"
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      maximum-pool-size: 5
+#     transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+
+    scraptaxIf:
+      datasource-type: pool
+      dbms-type: oracle
+      jdbc-url: jdbc:log4jdbc:oracle:thin:@10.134.254.37:1521:DSFIMDBS
+      username: SAFETAX
+      password: "MDdHSUJtUmxpaGVOeFVwZ0ZWYkV5djREV1NvT1llK28"
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      maximum-pool-size: 5
+#     transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+
+service:
+  ##서울보증보험 설정
+  sgic:
+    ## 서울보증보험 설정 경로
+    config-path: C:/matrixIDE/workspace/lgl/modules/srm_mm/src/main/resources/SGIxLinker
+    template-path: ${service.sgic.config-path}/templates/
+  report:
+    ubi:
+      ## PDF 로컬 변환을 위한 jrf 파일위치 경로
+      jrf-path: C:/matrixIDE/workspace/lgl/bin/main/static/reports/ubi4/jrf/
