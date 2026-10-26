@@ -1,0 +1,32 @@
+현재 내가 진행 하고 있는 프로젝트이다.
+코비전 시스템을 클레버스 시스템으로 전환하고있다. 
+기존 asis 의 소스를 그대로 적용 해야 하므로, 
+asis 의 소스를 tobe 로 전환 하는 과정중이다.
+나는 품의서 관련 양식 작업과 SAP 연동 관련 업무를 현재 하고 있는중이다. 
+SAP 는 현재 로컬에서는 붙을 수가 없어서 테스트 데이터 처럼 그냥 자체 반환 로직을 사용하고 있다.
+
+asis 의 특정 라이브러리 스크립트들 "$$" , XFROM 등은 사용 할 수 없고 JQUERY 로 변형을 해야되며, 
+다국어 관련해서도 다른 부분이 있다. 
+-스크립트 케이스
+Common.Warning(Common.getDic("resc_expense_change_msg"),"");  -> alert(($.rsc("app.hwoc.cw.resc_expense_change_msg", "업무처리권한표를 확인하시어 협조결재를 등록하시기 바랍니다")));
+기존 변수 "resc_expense_change_msg" 의 값이 tobe 시스템에 없을 경우 app.hwoc.cw.resc_expense_change_msg 형식으로 코드를 따서 진행을 하고 있다.
+-jsp 케이스
+<spring:message code='Cache.resc_ex_currentyear'/> -> <h:rsc key='app.hwoc.cw.resc_ex_currentyear' defaultValue='당해년도' />
+이런식으로 스크립트 케이스와 동일하게 코드를 따서 진행을 한다.
+
+혹시 내가 소스 변환 작업을 요청 할 경우 
+이부분은 내가 직접 해당 코드들을 점검을 DB 로 해야됨으로 
+asis 를 tobe 형태로 "Cache." 은 있으면 삭제해주고,  defaultValue 값은 code 값과 동일하게 우선 변경 해주고 
+자바 배열로 값을 따로 텍스트로 추출좀 해줘
+"코드값"
+,"코드값"
+작업은 여기서 잠시 대기했다가, 내가 DB 로 확인 처리 하면, 
+[SKIP] 이미 값이 존재합니다. DICCODE: resc_expense_reqgrp_msg_A, 기존 I18N_KEY: app.hwoc.cw.resc_expense_reqgrp_msg_A, VALUE: 경영관리담당 검토(예산)가 누락되었습니다.
+과 같은 로그를 줄테니까, 받아서 처리 해줘.
+
+위 부분은 프로젝트 기본으로 현재 작업 세션에서는 기본으로 무조건 적용 되어야 되는 사항으로 지침을 기억을 하길바란다.
+현재 tobe 파일도 등록만 가능하게 만들어 놓고 상세하게는 모든 작업이 진행이 다 되지 않았다.
+
+앞으로 추가 asis 에서 변화해야될 양식도 있고, 기존 지금 파일들에대해서도 완성도를 높일 예정이다.
+
+분석에 대한 리뷰는 현재는 하지말고, 네가 더 필요한 파일이나 알아야될 상황이 있으면 나에게 알려줘라.
